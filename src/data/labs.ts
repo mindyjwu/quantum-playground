@@ -111,7 +111,7 @@ Device result:
       { title: "Install (same as Lab 1)", text: "If you already set up Lab 1, skip this step.", code: INSTALL, lang: "bash" },
       {
         title: "Run it locally",
-        text: "Four circuits (two measurement choices for each side) are run on an ideal simulator and a noisy simulated chip, then combined into S. Ideal S is just under 2.83 because of random sampling.",
+        text: "Four circuits (two measurement choices for each side) are run on an ideal simulator and a noisy simulated chip, then combined into S. Ideal S should land near 2.83 (the theoretical maximum, 2√2), but because each run is a random sample it can come out a little above or below, by roughly ±0.03 at the default 4000 shots. A value slightly over 2.83 is shot noise, not a broken law of physics.",
         code: "python labs/02_chsh_bell_test.py", lang: "bash",
         expected: `ideal simulator        S = 2.815   (VIOLATES the classical bound of 2)
 noisy simulated chip   S = 2.591   (VIOLATES the classical bound of 2)
