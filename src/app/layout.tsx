@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import StarField from "@/components/StarField";
 
 export const metadata: Metadata = {
   title: "Quantum Playground",
   description: "An interactive, honest guide to quantum computing: learn, simulate, and see what's real today.",
 };
 
-// Runs before paint to avoid a theme flash. Defaults to dark; respects a saved choice.
-const themeScript = `try{var t=localStorage.getItem('qp.theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t}else if(window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.dataset.theme='light'}else{document.documentElement.dataset.theme='dark'}}catch(e){document.documentElement.dataset.theme='dark'}`;
+// Runs before paint to avoid a theme flash. Space (dark) is the default; only an explicit saved choice switches to day mode.
+const themeScript = `try{var t=localStorage.getItem('qp.theme');document.documentElement.dataset.theme=(t==='light')?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-screen">
+        <StarField />
         <Nav />
         <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">

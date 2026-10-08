@@ -15,7 +15,9 @@ const SECTIONS = [
 export default function Home() {
   return (
     <div className="fade-in space-y-10">
-      <section className="pt-4">
+      <section className="relative pt-4">
+        <div className="horizon" aria-hidden="true"><span className="halo" /><span className="ring" /><span className="disk" /></div>
+        <div className="relative z-10">
         <p className="mb-3 text-sm font-medium tracking-wide text-teal uppercase">Learn it · Simulate it · See what's real</p>
         <h1 className="max-w-3xl text-4xl leading-tight font-semibold sm:text-5xl">
           A quantum playground for people who build things.
@@ -27,6 +29,7 @@ export default function Home() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/learn" className="btn btn-primary">Start the learning path</Link>
           <Link href="/demos" className="btn">Jump to the demos</Link>
+        </div>
         </div>
       </section>
 

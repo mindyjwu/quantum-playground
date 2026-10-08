@@ -13,7 +13,7 @@ export default function ThemeToggle() {
     try { localStorage.setItem("qp.theme", next); } catch { /* ignore */ }
   };
   return (
-    <button onClick={toggle} className="btn !min-h-9 !px-3" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>
+    <button onClick={toggle} className="btn !min-h-9 !px-3" aria-label={theme === "dark" ? "Switch to day mode" : "Switch to space mode"} title={theme === "dark" ? "Day mode" : "Space mode"}>
       {theme === "dark" ? "☀" : "☾"}
     </button>
   );

@@ -3,19 +3,19 @@
 /* Palette derived from the portfolio's "evening water" theme (dark-first). */
 :root {
   color-scheme: dark;
-  --bg: #0e161d;
-  --card: #121c25;
-  --card-2: #172531;
-  --ink: #e6eef3;
-  --soft: #aec1ce;
-  --muted: #8aa1b0;
-  --line: rgba(230, 238, 243, 0.12);
-  --accent: #8cbce0;
-  --accent-ink: #0e161d;
-  --teal: #6fd3c0;
-  --amber: #e5b567;
-  --violet: #b9a3f0;
-  --rose: #f08a9b;
+  --bg: #000000;                       /* true black: the page is deep space */
+  --card: rgba(7, 11, 16, 0.84);
+  --card-2: #0d141d;
+  --ink: #eef3f8;
+  --soft: #b9c9d9;
+  --muted: #8a9fb4;
+  --line: rgba(190, 215, 245, 0.14);
+  --accent: #9cc9ff;
+  --accent-ink: #000000;
+  --teal: #6fe0cd;
+  --amber: #ffc46b;
+  --violet: #c3adff;
+  --rose: #ff93a6;
 }
 :root[data-theme="light"] {
   color-scheme: light;
@@ -52,8 +52,12 @@
   --font-serif: "Fraunces", ui-serif, Georgia, serif;
 }
 
-html { scroll-behavior: smooth; }
+/* `clip` on BOTH html and body: the body clips its own box (the glow can't widen the page), and unlike `hidden` it keeps position:sticky working. */
+html { scroll-behavior: smooth; scrollbar-color: #2b3847 #000; overflow-x: clip; }
+:root[data-theme="light"] { scrollbar-color: auto; }
+::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
 body {
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -81,3 +85,23 @@ h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.01em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ---- Space theme (dark mode only) ---- */
+.starfield { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+:root[data-theme="light"] .starfield { display: none; }
+
+:root:not([data-theme="light"]) a.card:hover { box-shadow: 0 0 34px -12px var(--accent); }
+:root:not([data-theme="light"]) .btn-primary { box-shadow: 0 0 24px -8px var(--accent); }
+
+/* Interstellar-style "event horizon" behind the home hero: a black disc that hides the stars behind it,
+   ringed by a thin bright photon ring and a lensed accretion disk. Purely decorative. */
+.horizon { position: absolute; z-index: 0; pointer-events: none; right: -22%; top: -56px; width: min(560px, 92vw); aspect-ratio: 1; }
+.horizon .halo { position: absolute; inset: -30%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 150, 70, 0.20), rgba(255, 120, 40, 0.07) 55%, transparent 75%); animation: breathe 9s ease-in-out infinite; }
+.horizon .ring { position: absolute; inset: 20%; border-radius: 50%; background: #000;
+  box-shadow: 0 0 0 1.5px rgba(255, 224, 190, 0.9), 0 0 18px 3px rgba(255, 176, 100, 0.65), 0 0 70px 18px rgba(255, 120, 40, 0.24), inset 0 0 30px 4px rgba(255, 190, 120, 0.22); }
+.horizon .disk { position: absolute; left: -8%; right: -8%; top: 50%; height: 7%; border-radius: 50%; transform: translateY(-50%) rotate(-11deg);
+  background: radial-gradient(closest-side, #fff 0%, rgba(255, 226, 190, 0.95) 22%, rgba(255, 170, 90, 0.55) 55%, transparent 100%); filter: blur(1.2px); mix-blend-mode: screen; }
+:root[data-theme="light"] .horizon { display: none; }
+@keyframes breathe { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+/* Below 1024px the text spans nearly the full width, so tuck the horizon into the top-right corner. */
+@media (max-width: 1023px) { .horizon { right: -56%; top: -150px; width: min(100vw, 560px); opacity: 0.7; } .horizon .disk { opacity: 0.3; } }

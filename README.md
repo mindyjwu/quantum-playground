@@ -26,6 +26,13 @@ python labs/test_labs.py     # simulator-only sanity tests (never touches IBM ha
 `SamplerV2` is deprecated as of qiskit-ibm-runtime 0.50.0 (replacement: `qiskit_ibm_runtime.executor_sampler.Sampler`,
 which worked on the local simulated chip but has not been tried on hardware); see the lab's "Honest limits".
 
+## Space theme
+Dark mode is the default: a true-black page (`--bg: #000`) with a canvas starfield (`src/components/StarField.tsx`, logic and tests in
+`src/lib/stars.ts`) and an "event horizon" glow on the home hero. The sky is deterministic (seeded), capped at 2x pixel density and ~30fps,
+pauses when the tab is hidden, and is a still image under `prefers-reduced-motion`. Day mode (the ☀ toggle) turns the stars and glow off
+entirely and stops the animation loop. Text colors were checked against WCAG AA on the new black, and hero text was measured against the real
+rendered background at widths from 360px to 1440px.
+
 ## Think Bigger
 `src/data/think-bigger.ts` holds the content. Every date and figure carries a claim label (`scheduled`, `vendor-target`,
 `forecast`, `reported`) so readers can tell a regulator's deadline from a vendor's roadmap or an expert forecast; a unit test
