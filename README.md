@@ -14,6 +14,10 @@ npm run check-links  # verifies every external source link (needs internet)
 ## Deploy on Vercel
 Import this repo in Vercel (framework preset: Next.js). No root-directory setting or environment variables are needed.
 
+## Requirements
+Node 20+ for the site. **Python 3.11+ for the labs** (the Python bundled with macOS is too old: `pip` will say
+"No matching distribution found for qiskit"). Install a newer Python (python.org or `brew install python@3.12`) and create the venv with it.
+
 ## Build Lab scripts
 `labs/` holds the starter scripts the Build Lab page displays (the page reads these files at build time, so the site
 always shows exactly the tested code). They run on local simulators by default; `--hardware` (labs 1 and 2) targets a real IBM device.
@@ -41,11 +45,12 @@ Time-sensitive facts (funding, NIST/EU/CNSA dates, DARPA QBI stages, expert surv
 re-checked periodically. "My quantum goals" is stored in `localStorage` (`qp.goals.v1`), is parsed defensively, and can be exported as Markdown.
 
 ## Link verification (Resource Library & sources)
-Links were assembled in a network-restricted sandbox and are **unverified**; each resource records whether its URL
-appeared in search results (`urlBasis: "search"`) or was recalled from memory (`"memory"`).
-To verify: run `npm run check-links` on a machine with internet access, fix or remove failures, then set
-`verified: "YYYY-MM-DD"` on each passing resource in `src/data/resources.ts`. The UI then swaps the warning for a ✓.
-The script also checks the source links in `src/data/stages.ts` and `src/data/realworld.ts`.
+`npm run check-links` checks every external URL in `src/data/*.ts`. Statuses: `OK`, `WARN` (the site returned 401/403/429, which
+usually means it blocks scripts, so open it in a browser) and `FAIL` (404/410/network error). If more than a quarter are blocked, it
+exits with code 2 because the run isn't meaningful (offline, proxy, rate limit).
+Each resource records where its URL came from (`urlBasis`) and, once checked, `verified: "YYYY-MM-DD"` in `src/data/resources.ts`;
+the UI shows a ✓ for verified links. All 12 resources were verified on 2026-10-08 (53 of 54 links OK; the other, a Science DOI,
+returned 403 to the script). A passing check means the page loads, not that its content still matches our description.
 
 ## Structure
 - `src/lib/quantum.ts` — state-vector simulator (H, X, Z, CNOT, Bloch vectors, sampling). Qubit 0 is the leftmost bit. Tested in `tests/`.

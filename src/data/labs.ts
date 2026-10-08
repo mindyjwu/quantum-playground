@@ -28,7 +28,8 @@ export type Project = {
   extend: string[];
 };
 
-export const INSTALL = `python3 -m venv .venv && source .venv/bin/activate
+export const INSTALL = `python3 --version     # must say 3.11 or newer (see the note below if not)
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r labs/requirements.txt   # pinned to the versions these scripts were tested with`;
 
 export const PROJECTS: Project[] = [
@@ -51,7 +52,7 @@ export const PROJECTS: Project[] = [
       },
       {
         title: "Install the tools",
-        text: "Use a virtual environment so the pinned versions don't clash with anything else.",
+        text: "These labs need Python 3.11 or newer (Cirq and PennyLane require it; Qiskit needs 3.10+). The Python that ships with macOS is older and will fail at pip install with “No matching distribution found for qiskit”. If python3 --version shows 3.9 or lower, install a newer Python from python.org or with Homebrew (brew install python@3.12), then create the environment with python3.12 -m venv .venv instead. Use a virtual environment so the pinned versions don't clash with anything else.",
         code: INSTALL, lang: "bash",
       },
       {

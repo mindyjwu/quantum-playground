@@ -23,6 +23,8 @@ async function check(url) {
     try {
       const res = await fetch(url, { method, redirect: "follow", headers: { "user-agent": UA, accept: "text/html,*/*" }, signal: AbortSignal.timeout(20000) });
       if (res.ok) return { ok: true, status: res.status, final: res.url };
+      // Some publishers block scripts (401/403/429). That says nothing about whether the page exists, so warn instead of failing.
+      if (method === "GET" && [401, 403, 429].includes(res.status)) return { ok: true, warn: true, status: res.status };
       if (method === "GET" || res.status === 404 || res.status === 410) return { ok: false, status: res.status };
     } catch (e) {
       if (method === "GET") return { ok: false, status: String(e.cause?.code ?? e.name) };
@@ -38,11 +40,18 @@ await Promise.all(Array.from({ length: 6 }, async () => {
   while (next < urls.length) { const i = next++; results[i] = await check(urls[i]); }
 }));
 
-let bad = 0;
+let bad = 0, warned = 0;
 urls.forEach((u, i) => {
   const r = results[i];
   if (!r.ok) bad++;
-  console.log(`${r.ok ? "OK  " : "FAIL"} ${String(r.status).padEnd(5)} ${u}${r.ok && r.final && r.final !== u ? `  -> ${r.final}` : ""}`);
+  if (r.warn) warned++;
+  const tag = !r.ok ? "FAIL" : r.warn ? "WARN" : "OK  ";
+  console.log(`${tag} ${String(r.status).padEnd(5)} ${u}${r.ok && r.final && r.final !== u ? `  -> ${r.final}` : ""}`);
 });
-console.log(`\n${urls.length - bad}/${urls.length} links OK`);
+console.log(`\n${urls.length - bad - warned}/${urls.length} links OK` + (warned ? `, ${warned} blocked the checker (WARN: open in a browser to confirm)` : "") + (bad ? `, ${bad} FAILED` : ""));
+if (warned / urls.length > 0.25) {
+  // A few blocked links is normal (some publishers reject scripts). Most blocked means we're offline, behind a proxy or rate-limited.
+  console.log("\nMost links were blocked, so these results are NOT meaningful. Check your connection / network policy and try again.");
+  process.exit(2);
+}
 process.exit(bad ? 1 : 0);

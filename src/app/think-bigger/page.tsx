@@ -128,7 +128,7 @@ export default function Page() {
       <section className="card p-4" aria-label="Sources">
         <h2 className="text-sm font-semibold">More sources</h2>
         <Links items={THINK_SOURCES} />
-        <p className="mt-2 text-xs text-muted">Figures marked “secondary” come from press or vendor explainers, not the primary documents. Links haven't all been machine-verified (see the README).</p>
+        <p className="mt-2 text-xs text-muted">Figures marked “secondary” come from press or vendor explainers, not the primary documents. Links were machine-checked on 2026-10-08 (one publisher blocks automated checks); see the README.</p>
       </section>
     </div>
   );

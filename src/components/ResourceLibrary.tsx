@@ -30,10 +30,14 @@ export default function ResourceLibrary() {
 
   return (
     <div className="mt-6">
-      <div role="note" className="rounded-xl border border-amber/40 bg-amber/10 p-3 text-sm text-soft">
-        <span className="font-semibold text-amber">Heads up:</span> these links haven't been verified yet. Each card says whether its URL appeared in search results or was recalled from memory.
-        If one is broken, it's a bug in our list, not a sign the resource is gone.
-      </div>
+      {RESOURCES.some((r) => !r.verified) ? (
+        <div role="note" className="rounded-xl border border-amber/40 bg-amber/10 p-3 text-sm text-soft">
+          <span className="font-semibold text-amber">Heads up:</span> some of these links haven't been verified yet. Each card says whether its URL appeared in search results or was recalled from memory.
+          If one is broken, it's a bug in our list, not a sign the resource is gone.
+        </div>
+      ) : (
+        <p role="note" className="text-sm text-muted">✓ Every link was machine-checked on {RESOURCES.map((r) => r.verified).sort().at(-1)}. That confirms each page loads, not that its contents still match our description, and links can change. If one breaks, let us know.</p>
+      )}
 
       <div className="card mt-5 space-y-4 p-4">
         <label className="block text-sm">

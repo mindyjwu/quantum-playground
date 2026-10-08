@@ -1,3 +1,4 @@
+# Requires Python 3.11 or newer (cirq-core and pennylane need >=3.11; qiskit needs >=3.10).
 # Versions these scripts were tested against (newer versions probably work; the Qiskit Runtime API changes often).
 qiskit==2.5.2
 qiskit-aer==0.17.2

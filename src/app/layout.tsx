@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">
           Quantum Playground is an educational project. Simulations run in your browser and use ideal, noise-free qubits, so real hardware behaves differently.
-          Claims cite sources where possible; where experts disagree, timelines are marked uncertain. External links have not all been machine-verified yet.
+          Claims cite sources where possible; where experts disagree, timelines are marked uncertain. Source links were machine-checked on 2026-10-08 (one publisher blocks automated checks); links can change.
         </footer>
       </body>
     </html>

@@ -95,7 +95,7 @@ export default function BuildLab({ scripts }: { scripts: Record<string, string> 
         <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-soft">
           {LAB_SOURCES.map((s) => <li key={s.url}><a className="text-accent underline underline-offset-2" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a></li>)}
         </ul>
-        <p className="mt-2 text-xs text-muted">These links have not been machine-verified yet (see the README).</p>
+        <p className="mt-2 text-xs text-muted">These links were machine-checked on 2026-10-08; see the README.</p>
       </section>
     </div>
   );
