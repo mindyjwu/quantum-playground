@@ -14,6 +14,18 @@ npm run check-links  # verifies every external source link (needs internet)
 ## Deploy on Vercel
 Import this repo in Vercel (framework preset: Next.js). No root-directory setting or environment variables are needed.
 
+## Build Lab scripts
+`labs/` holds the starter scripts the Build Lab page displays (the page reads these files at build time, so the site
+always shows exactly the tested code). They run on local simulators by default; `--hardware` (labs 1 and 2) targets a real IBM device.
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r labs/requirements.txt
+python labs/test_labs.py     # simulator-only sanity tests (never touches IBM hardware)
+```
+**Not tested:** IBM account setup and real-hardware submission (no network/account in the authoring environment).
+`SamplerV2` is deprecated as of qiskit-ibm-runtime 0.50.0 (replacement: `qiskit_ibm_runtime.executor_sampler.Sampler`,
+which worked on the local simulated chip but has not been tried on hardware); see the lab's "Honest limits".
+
 ## Link verification (Resource Library & sources)
 Links were assembled in a network-restricted sandbox and are **unverified**; each resource records whether its URL
 appeared in search results (`urlBasis: "search"`) or was recalled from memory (`"memory"`).
@@ -23,6 +35,7 @@ The script also checks the source links in `src/data/stages.ts` and `src/data/re
 
 ## Structure
 - `src/lib/quantum.ts` — state-vector simulator (H, X, Z, CNOT, Bloch vectors, sampling). Qubit 0 is the leftmost bit. Tested in `tests/`.
+- `src/data/labs.ts` — Build Lab projects/steps. `src/data/resources.ts` — Resource Library.
 - `src/data/stages.ts` — Learning Path lessons + quizzes. `src/data/realworld.ts` — Real-World cards.
 - `src/components/` — demos (Bloch sphere, measurement, Bell, circuit builder), Learn/Quiz, cards.
 - Progress is stored in `localStorage` under `qp.progress.v1`; theme under `qp.theme`.
