@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { HomeProgress } from "@/components/Progress";
 import { REAL_WORLD } from "@/data/realworld";
+import { RESOURCES } from "@/data/resources";
 
 const SECTIONS = [
   { href: "/learn", title: "Learning Path", tag: "4 stages · quizzes", text: "Foundations → Qubits & Gates → Algorithms → Real-World Applications, with the actual math and a progress tracker." },
   { href: "/demos", title: "Interactive Demos", tag: "4 simulators", text: "Rotate a qubit on the Bloch sphere, measure it, entangle a Bell pair, and wire your own circuit." },
+  { href: "/resources", title: "Resource Library", tag: `${RESOURCES.length} curated picks`, text: "Videos, courses, podcasts and books, filterable by format, level and cost." },
   { href: "/real-world", title: "Quantum in the Real World", tag: `${REAL_WORLD.length} technologies`, text: "What's already in your pocket, what's emerging, and what's still experimental — with the caveats." },
 ];
 
@@ -28,7 +30,7 @@ export default function Home() {
 
       <HomeProgress />
 
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {SECTIONS.map((s) => (
           <Link key={s.href} href={s.href} className="card group p-5 transition-colors hover:border-accent">
             <p className="text-xs text-muted">{s.tag}</p>
@@ -40,7 +42,7 @@ export default function Home() {
 
       <section className="card p-5">
         <h2 className="text-lg font-semibold">Coming next</h2>
-        <p className="mt-1 text-sm text-soft">Resource Library (verified links), Build Lab (run a circuit on real IBM hardware), and Think Bigger (opportunities + your quantum goals).</p>
+        <p className="mt-1 text-sm text-soft">Build Lab (run a circuit on real IBM hardware) and Think Bigger (opportunities + your quantum goals).</p>
       </section>
     </div>
   );

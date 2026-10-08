@@ -46,7 +46,7 @@ export const STAGES: Stage[] = [
       { q: "Which is the most accurate description of “quantum parallelism”?", options: ["The computer runs every possible answer and shows you all of them", "A circuit acts on a superposition, but measurement returns one outcome, so interference must be engineered to favor the answer", "Qubits are faster than transistors", "Quantum computers solve every problem exponentially faster"], answer: 1, why: "You get a single sampled outcome per run. Useful speedups require algorithmic structure that interference can exploit." },
     ],
     sources: [
-      { label: "Nielsen & Chuang, Quantum Computation and Quantum Information (Ch. 1–2)", url: "https://www.cambridge.org/highereducation/books/quantum-computation-and-quantum-information/01E10196D0A682A6AEFFEA52D53BE9AE" },
+      { label: "Nielsen & Chuang, Quantum Computation and Quantum Information, 10th anniv. ed. (Ch. 1–2)", url: "https://www.cambridgebookshop.co.uk/products/quantum-computation-and-quantum-information-10th-anniversary-edition" },
       { label: "Aaronson, “The Limits of Quantum Computers” (Sci. Am., 2008)", url: "https://www.scottaaronson.com/writings/limitsqc-draft.pdf" },
     ],
   },
