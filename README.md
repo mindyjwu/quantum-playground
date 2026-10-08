@@ -26,6 +26,13 @@ python labs/test_labs.py     # simulator-only sanity tests (never touches IBM ha
 `SamplerV2` is deprecated as of qiskit-ibm-runtime 0.50.0 (replacement: `qiskit_ibm_runtime.executor_sampler.Sampler`,
 which worked on the local simulated chip but has not been tried on hardware); see the lab's "Honest limits".
 
+## Think Bigger
+`src/data/think-bigger.ts` holds the content. Every date and figure carries a claim label (`scheduled`, `vendor-target`,
+`forecast`, `reported`) so readers can tell a regulator's deadline from a vendor's roadmap or an expert forecast; a unit test
+keeps vendor/forecast items from being labeled `scheduled`. Figures we only saw through press coverage are marked secondary.
+Time-sensitive facts (funding, NIST/EU/CNSA dates, DARPA QBI stages, expert surveys) were checked in October 2026 and should be
+re-checked periodically. "My quantum goals" is stored in `localStorage` (`qp.goals.v1`), is parsed defensively, and can be exported as Markdown.
+
 ## Link verification (Resource Library & sources)
 Links were assembled in a network-restricted sandbox and are **unverified**; each resource records whether its URL
 appeared in search results (`urlBasis: "search"`) or was recalled from memory (`"memory"`).
@@ -35,6 +42,7 @@ The script also checks the source links in `src/data/stages.ts` and `src/data/re
 
 ## Structure
 - `src/lib/quantum.ts` — state-vector simulator (H, X, Z, CNOT, Bloch vectors, sampling). Qubit 0 is the leftmost bit. Tested in `tests/`.
+- `src/data/think-bigger.ts` — Think Bigger content. `src/lib/goals.ts` — goals/notes state and Markdown export.
 - `src/data/labs.ts` — Build Lab projects/steps. `src/data/resources.ts` — Resource Library.
 - `src/data/stages.ts` — Learning Path lessons + quizzes. `src/data/realworld.ts` — Real-World cards.
 - `src/components/` — demos (Bloch sphere, measurement, Bell, circuit builder), Learn/Quiz, cards.

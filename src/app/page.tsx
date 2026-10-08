@@ -7,6 +7,7 @@ const SECTIONS = [
   { href: "/learn", title: "Learning Path", tag: "4 stages · quizzes", text: "Foundations → Qubits & Gates → Algorithms → Real-World Applications, with the actual math and a progress tracker." },
   { href: "/demos", title: "Interactive Demos", tag: "4 simulators", text: "Rotate a qubit on the Bloch sphere, measure it, entangle a Bell pair, and wire your own circuit." },
   { href: "/build-lab", title: "Build Lab", tag: "4 hands-on labs", text: "Run a circuit on real IBM hardware, test a Bell inequality, and try Cirq and PennyLane. Starter code included." },
+  { href: "/think-bigger", title: "Think Bigger", tag: "opportunities · your goals", text: "Where the field is heading, where the opportunities are, a hype check, and a space for your own quantum goals." },
   { href: "/resources", title: "Resource Library", tag: `${RESOURCES.length} curated picks`, text: "Videos, courses, podcasts and books, filterable by format, level and cost." },
   { href: "/real-world", title: "Quantum in the Real World", tag: `${REAL_WORLD.length} technologies`, text: "What's already in your pocket, what's emerging, and what's still experimental — with the caveats." },
 ];
@@ -39,11 +40,6 @@ export default function Home() {
             <p className="mt-2 text-sm text-soft">{s.text}</p>
           </Link>
         ))}
-      </section>
-
-      <section className="card p-5">
-        <h2 className="text-lg font-semibold">Coming next</h2>
-        <p className="mt-1 text-sm text-soft">Think Bigger: where the field is heading, where the opportunities are, and a space for your own quantum goals.</p>
       </section>
     </div>
   );
