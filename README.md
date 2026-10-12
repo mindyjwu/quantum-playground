@@ -2,6 +2,8 @@
 
 Interactive, honest intro to quantum computing. Next.js (App Router) + Tailwind v4, fully client-side — no backend.
 
+**Live site: https://quantum-playground-five.vercel.app/**
+
 ## Run
 ```bash
 npm install
