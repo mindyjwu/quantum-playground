@@ -1,6 +1,6 @@
 import LearningPath from "@/components/LearningPath";
 
-export const metadata = { title: "Learning Path · Quantum Playground" };
+export const metadata = { title: "Learning Path" };
 
 export default function Page() {
   return (

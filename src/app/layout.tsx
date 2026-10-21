@@ -3,10 +3,13 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import StarField from "@/components/StarField";
+import { PrefsProvider } from "@/components/PrefsProvider";
 
 export const metadata: Metadata = {
-  title: "Quantum Playground",
-  description: "An interactive, honest guide to quantum computing: learn, simulate, and see what's real today.",
+  metadataBase: new URL("https://quantum-playground-five.vercel.app"),
+  title: { default: "Quantum Playground", template: "%s · Quantum Playground" },
+  description: "An interactive, honest guide to quantum computing for every level: learn, simulate, solve puzzles, and see what's real today.",
+  openGraph: { title: "Quantum Playground", description: "Learn quantum computing hands-on, from first qubit to real hardware, without the hype.", type: "website" },
 };
 
 // Runs before paint to avoid a theme flash. Space (dark) is the default; only an explicit saved choice switches to day mode.
@@ -26,8 +29,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-screen">
         <StarField />
-        <Nav />
-        <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
+        <PrefsProvider>
+          <Nav />
+          <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
+        </PrefsProvider>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">
           Quantum Playground is an educational project. Simulations run in your browser and use ideal, noise-free qubits, so real hardware behaves differently.
           Claims cite sources where possible; where experts disagree, timelines are marked uncertain. Source links were machine-checked on 2026-10-08 (one publisher blocks automated checks); links can change.

@@ -3,7 +3,7 @@ import { join } from "node:path";
 import BuildLab from "@/components/BuildLab";
 import { PROJECTS } from "@/data/labs";
 
-export const metadata = { title: "Build Lab · Quantum Playground" };
+export const metadata = { title: "Build Lab" };
 
 export default function Page() {
   // Read the tested scripts at build time so the site shows exactly the code we ran.

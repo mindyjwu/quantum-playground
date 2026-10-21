@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeProgress } from "@/components/Progress";
+import StartHere from "@/components/StartHere";
 import { REAL_WORLD } from "@/data/realworld";
 import { RESOURCES } from "@/data/resources";
 
@@ -32,6 +33,8 @@ export default function Home() {
         </div>
         </div>
       </section>
+
+      <StartHere />
 
       <HomeProgress />
 

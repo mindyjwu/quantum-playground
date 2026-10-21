@@ -4,7 +4,7 @@ import BellDemo from "@/components/BellDemo";
 import CircuitBuilder from "@/components/CircuitBuilder";
 import type { ReactNode } from "react";
 
-export const metadata = { title: "Interactive Demos · Quantum Playground" };
+export const metadata = { title: "Interactive Demos" };
 
 function Demo({ id, title, intro, children }: { id: string; title: string; intro: string; children: ReactNode }) {
   return (

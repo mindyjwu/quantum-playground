@@ -1,6 +1,6 @@
 import RealWorldExplorer from "@/components/RealWorldExplorer";
 
-export const metadata = { title: "Quantum in the Real World · Quantum Playground" };
+export const metadata = { title: "Quantum in the Real World" };
 
 export default function Page() {
   return (

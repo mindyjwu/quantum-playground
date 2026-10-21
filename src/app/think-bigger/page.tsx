@@ -3,7 +3,7 @@ import GoalsNotes from "@/components/GoalsNotes";
 import HypeCheck from "@/components/HypeCheck";
 import { FACTS, HORIZON, KIND_META, LANES, PATHS, THINK_SOURCES, type ClaimKind } from "@/data/think-bigger";
 
-export const metadata = { title: "Think Bigger · Quantum Playground" };
+export const metadata = { title: "Think Bigger" };
 
 const KIND_STYLE: Record<ClaimKind, string> = {
   scheduled: "border-teal/50 text-teal",

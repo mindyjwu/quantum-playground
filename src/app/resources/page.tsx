@@ -1,6 +1,6 @@
 import ResourceLibrary from "@/components/ResourceLibrary";
 
-export const metadata = { title: "Resource Library · Quantum Playground" };
+export const metadata = { title: "Resource Library" };
 
 export default function Page() {
   return (
