@@ -2,7 +2,7 @@
 import { useLocalStorage } from "@/lib/useLocalStorage";
 import { STAGES } from "@/data/stages";
 
-export type ProgressState = { lessons: Record<string, boolean>; quiz: Record<string, number> };
+export type ProgressState = { lessons: Record<string, boolean>; quiz: Record<string, number>; bonus?: Record<string, number> };
 export const EMPTY_PROGRESS: ProgressState = { lessons: {}, quiz: {} };
 export const PROGRESS_KEY = "qp.progress.v1";
 
@@ -14,7 +14,7 @@ export function stageStats(p: ProgressState, stageId: string) {
   const s = STAGES.find((x) => x.id === stageId)!;
   const done = s.lessons.filter((l) => p.lessons[l.id]).length;
   const score = p.quiz[s.id];
-  return { done, total: s.lessons.length, score, quizTotal: s.quiz.length, complete: done === s.lessons.length && score !== undefined };
+  return { done, total: s.lessons.length, score, bonus: p.bonus?.[s.id], quizTotal: s.quiz.length, complete: done === s.lessons.length && score !== undefined };
 }
 
 export function overallPercent(p: ProgressState) {

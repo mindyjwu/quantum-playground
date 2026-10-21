@@ -2,18 +2,28 @@
 import { useState } from "react";
 import Link from "next/link";
 import { STAGES, type Stage } from "@/data/stages";
+import { LEVEL_EXTRAS } from "@/data/levels";
+import { levelLabel } from "@/lib/prefs";
+import { usePrefs } from "./PrefsProvider";
 import { ProgressBar, overallPercent, stageStats, useProgress } from "./Progress";
 import Quiz from "./Quiz";
 
 export default function LearningPath() {
   const [p, setP, ready] = useProgress();
+  const { prefs, ready: prefsReady } = usePrefs();
+  const level = prefsReady ? prefs.level : "intermediate"; // until preferences load, show the standard lessons
+  const style = prefs.style;
   const [active, setActive] = useState(STAGES[0].id);
   const stage = STAGES.find((s) => s.id === active) as Stage;
   const pct = ready ? overallPercent(p) : 0;
 
   const toggleLesson = (id: string) => setP((prev) => ({ ...prev, lessons: { ...prev.lessons, [id]: !prev.lessons[id] } }));
-  const saveScore = (score: number) => setP((prev) => ({ ...prev, quiz: { ...prev.quiz, [stage.id]: Math.max(score, prev.quiz[stage.id] ?? 0) } }));
-  const reset = () => { if (window.confirm("Reset all learning progress on this device?")) setP({ lessons: {}, quiz: {} }); };
+  const saveScore = (score: number, bonus: number | undefined) => setP((prev) => ({
+    ...prev,
+    quiz: { ...prev.quiz, [stage.id]: Math.max(score, prev.quiz[stage.id] ?? 0) },
+    ...(bonus !== undefined ? { bonus: { ...(prev.bonus ?? {}), [stage.id]: Math.max(bonus, prev.bonus?.[stage.id] ?? 0) } } : {}),
+  }));
+  const reset = () => { if (window.confirm("Reset all learning progress on this device?")) setP({ lessons: {}, quiz: {}, bonus: {} }); };
 
   return (
     <div className="mt-6">
@@ -36,7 +46,7 @@ export default function LearningPath() {
               <span className="text-xs text-muted">Stage {s.n}</span>
               <span className="block text-sm font-semibold">{s.title}</span>
               <span className="mt-1 block text-xs text-soft">
-                {ready ? `${st.done}/${st.total} lessons${st.score !== undefined ? ` · quiz ${st.score}/${st.quizTotal}` : ""}` : " "}
+                {ready ? `${st.done}/${st.total} lessons${st.score !== undefined ? ` · quiz ${st.score}/${st.quizTotal}` : ""}${st.bonus !== undefined ? ` · bonus ${st.bonus}/2` : ""}` : " "}
                 {ready && st.complete ? " ✓" : ""}
               </span>
             </button>
@@ -47,6 +57,7 @@ export default function LearningPath() {
       <section key={stage.id} className="fade-in mt-6" role="tabpanel" aria-label={stage.title}>
         <h2 className="text-2xl font-semibold">Stage {stage.n}: {stage.title}</h2>
         <p className="mt-1 text-soft">{stage.blurb}</p>
+        <p className="mt-2 text-xs text-muted" data-testid="viewing-as">Viewing as <span className="font-semibold text-soft">{levelLabel(level)}</span>. Change this any time with the ⚙ button at the top.</p>
 
         <div className="mt-5 space-y-4">
           {stage.lessons.map((l) => {
@@ -60,19 +71,42 @@ export default function LearningPath() {
                     Done
                   </label>
                 </div>
-                <div className="mt-2 space-y-3 text-[0.95rem] leading-relaxed text-soft">
-                  {l.body.map((b, i) => <p key={i}>{b}</p>)}
-                </div>
-                {l.math && (
-                  <pre className="mono mt-3 overflow-x-auto rounded-xl border border-line bg-card2 p-3 text-sm text-ink">{l.math.join("\n")}</pre>
-                )}
+                {(() => {
+                  const x = LEVEL_EXTRAS[l.id];
+                  const full = (
+                    <>
+                      <div className="mt-2 space-y-3 text-[0.95rem] leading-relaxed text-soft">{l.body.map((b, i) => <p key={i}>{b}</p>)}</div>
+                      {l.math && <pre className="mono mt-3 overflow-x-auto rounded-xl border border-line bg-card2 p-3 text-sm text-ink">{l.math.join("\n")}</pre>}
+                    </>
+                  );
+                  return (
+                    <>
+                      {level === "beginner" && x ? (
+                        <>
+                          <div className="mt-3 rounded-xl border border-teal/40 bg-teal/10 p-3">
+                            <p className="text-xs font-semibold tracking-wide text-teal uppercase">In plain language</p>
+                            {x.plain.map((t, i) => <p key={i} className="mt-1 text-[0.95rem] leading-relaxed text-ink">{t}</p>)}
+                          </div>
+                          <details className="mt-3 text-sm"><summary className="cursor-pointer text-soft">Read the fuller explanation and the math</summary>{full}</details>
+                        </>
+                      ) : full}
+                      {level === "expert" && x && (
+                        <details open className="mt-4 rounded-xl border border-violet/40 bg-violet/5 p-3">
+                          <summary className="cursor-pointer font-semibold text-violet">Go deeper: {x.deeper.title}</summary>
+                          <div className="mt-2 space-y-2 text-[0.95rem] leading-relaxed text-soft">{x.deeper.body.map((t, i) => <p key={i}>{t}</p>)}</div>
+                          {x.deeper.math && <pre className="mono mt-2 overflow-x-auto rounded-lg border border-line bg-card2 p-3 text-sm text-ink">{x.deeper.math.join("\n")}</pre>}
+                        </details>
+                      )}
+                    </>
+                  );
+                })()}
                 {l.tryIt && <Link href={l.tryIt.href} className="btn mt-3">{l.tryIt.label} →</Link>}
               </article>
             );
           })}
         </div>
 
-        <Quiz key={stage.id} stage={stage} best={p.quiz[stage.id]} onFinish={saveScore} />
+        <Quiz key={`${stage.id}-${level}-${style}`} stage={stage} level={level} style={style} best={p.quiz[stage.id]} bonusBest={p.bonus?.[stage.id]} onFinish={saveScore} />
 
         <div className="mt-6 card p-4">
           <h3 className="text-sm font-semibold">Sources for this stage</h3>
