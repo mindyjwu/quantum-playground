@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HomeProgress } from "@/components/Progress";
+import Constellation from "@/components/Constellation";
 import StartHere from "@/components/StartHere";
 import { REAL_WORLD } from "@/data/realworld";
 import { RESOURCES } from "@/data/resources";
@@ -12,6 +12,7 @@ const SECTIONS = [
   { href: "/build-lab", title: "Build Lab", tag: "4 hands-on labs", text: "Run a circuit on real IBM hardware, test a Bell inequality, and try Cirq and PennyLane. Starter code included." },
   { href: "/think-bigger", title: "Think Bigger", tag: "opportunities · your goals", text: "Where the field is heading, where the opportunities are, a hype check, and a space for your own quantum goals." },
   { href: "/resources", title: "Resource Library", tag: `${RESOURCES.length} curated picks`, text: "Videos, courses, podcasts and books, filterable by format, level and cost." },
+  { href: "/mindy", title: "Mindy's Space", tag: "notebook · portfolio", text: "Why this site exists, how it was built, what I'm learning, and what's next." },
   { href: "/real-world", title: "Quantum in the Real World", tag: `${REAL_WORLD.length} technologies`, text: "What's already in your pocket, what's emerging, and what's still experimental — with the caveats." },
 ];
 
@@ -38,7 +39,7 @@ export default function Home() {
 
       <StartHere />
 
-      <HomeProgress />
+      <Constellation />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SECTIONS.map((s) => (

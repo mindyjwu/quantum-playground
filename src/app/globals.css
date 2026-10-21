@@ -110,3 +110,6 @@ h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.01em; }
 .burst { position: absolute; left: 50%; top: 28px; width: 0; height: 0; pointer-events: none; }
 .burst span { position: absolute; left: -2px; top: -2px; width: 4px; height: 4px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: burst .9s ease-out both; transform: rotate(var(--a)) translateX(0); }
 @keyframes burst { from { opacity: 1; transform: rotate(var(--a)) translateX(6px); } to { opacity: 0; transform: rotate(var(--a)) translateX(70px); } }
+
+.star-glow { animation: star-glow 3.6s ease-in-out infinite; }
+@keyframes star-glow { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.3; } }

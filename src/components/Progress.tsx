@@ -34,18 +34,3 @@ export function ProgressBar({ percent, label }: { percent: number; label: string
     </div>
   );
 }
-
-export function HomeProgress() {
-  const [p, , ready] = useProgress();
-  const pct = ready ? overallPercent(p) : 0;
-  return (
-    <div className="card p-4">
-      <div className="mb-2 flex items-baseline justify-between text-sm">
-        <span className="text-soft">Your learning progress</span>
-        <span className="font-semibold">{pct}%</span>
-      </div>
-      <ProgressBar percent={pct} label="Overall learning progress" />
-      <p className="mt-2 text-xs text-muted">Saved in this browser only (localStorage). Nothing leaves your device.</p>
-    </div>
-  );
-}

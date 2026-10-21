@@ -32,6 +32,19 @@ python labs/test_labs.py     # simulator-only sanity tests (never touches IBM ha
 `SamplerV2` is deprecated as of qiskit-ibm-runtime 0.50.0 (replacement: `qiskit_ibm_runtime.executor_sampler.Sampler`,
 which worked on the local simulated chip but has not been tried on hardware); see the lab's "Honest limits".
 
+## Levels, play style and puzzles
+Visitors choose **Beginner / Intermediate / Expert** and **Cozy / Instrument** (stored in `localStorage` as `qp.prefs.v1`, shared via
+`PrefsProvider`). Level changes the Learn page: beginners get plain-language summaries with the math collapsed and quiz hints; experts get
+"Go deeper" panels and two bonus questions per stage (scored separately from the core four). All of that content lives in `src/data/levels.ts`.
+Style changes tone and presentation (hints, celebration, exact numbers), never what is correct.
+
+`/play` has 12 circuit puzzles (`src/lib/puzzles.ts`). Each puzzle's par is the *true minimum* gate count: `tests/puzzles.test.ts`
+re-derives it by exhaustive search, so a puzzle can't ship unsolvable or with a wrong par. Beginner puzzles judge measurement odds;
+intermediate and expert puzzles judge the full state including phase. Progress is `qp.puzzles.v1`.
+
+The home page's **constellation** lights one star per completed lesson, quiz or puzzle (31 in total). **Mindy's Space** (`/mindy`) is
+written from `src/data/mindy.ts`; edit that file to update it.
+
 ## Space theme
 Dark mode is the default: a true-black page (`--bg: #000`) with a canvas starfield (`src/components/StarField.tsx`, logic and tests in
 `src/lib/stars.ts`) and an "event horizon" glow on the home hero. The sky is deterministic (seeded), capped at 2x pixel density and ~30fps,

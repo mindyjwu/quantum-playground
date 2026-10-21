@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import StarField from "@/components/StarField";
 import { PrefsProvider } from "@/components/PrefsProvider";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://quantum-playground-five.vercel.app"),
@@ -34,6 +35,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
         </PrefsProvider>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">
+          <nav aria-label="Footer" className="mb-3 flex flex-wrap gap-x-5 gap-y-1">
+            <Link className="text-soft hover:text-ink" href="/mindy">Mindy's Space</Link>
+            <a className="text-soft hover:text-ink" href="https://github.com/mindyjwu/quantum-playground" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a>
+          </nav>
           Quantum Playground is an educational project. Simulations run in your browser and use ideal, noise-free qubits, so real hardware behaves differently.
           Claims cite sources where possible; where experts disagree, timelines are marked uncertain. Source links were machine-checked on 2026-10-08 (one publisher blocks automated checks); links can change.
         </footer>
