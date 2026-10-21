@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { basisLabel, probabilities, runCircuit, type CircuitOp, type SingleGateName } from "@/lib/quantum";
 import { ketString, pct } from "@/lib/format";
 
@@ -26,9 +26,20 @@ const PRESETS: { name: string; n: number; build: (g: Cell[][]) => void }[] = [
   { name: "H·H = identity", n: 2, build: (g) => { g[0][0] = { t: "H" }; g[1][0] = { t: "H" }; } },
 ];
 
-export default function CircuitBuilder() {
-  const [n, setN] = useState(2);
-  const [grid, setGrid] = useState<Cell[][]>(() => { const g = emptyGrid(2); PRESETS[0].build(g); return g; });
+/** Number of gates (a CNOT counts as one). */
+const countOps = (g: Cell[][]) => g.reduce((total, col) => total + col.filter((c) => c && c.t !== "T").length, 0);
+
+type Props = {
+  /** Puzzle mode: fixed qubit count, a gate budget, no presets or live-state panel. */
+  puzzle?: { n: number; maxGates: number };
+  /** Called with the circuit's operations whenever it changes. */
+  onOps?: (ops: CircuitOp[]) => void;
+};
+
+export default function CircuitBuilder({ puzzle, onOps }: Props = {}) {
+  const compact = !!puzzle;
+  const [n, setN] = useState(puzzle?.n ?? 2);
+  const [grid, setGrid] = useState<Cell[][]>(() => { const g = emptyGrid(puzzle?.n ?? 2); if (!puzzle) PRESETS[0].build(g); return g; });
   const [tool, setTool] = useState<Tool | null>(null);
   const [msg, setMsg] = useState("");
 
@@ -41,6 +52,7 @@ export default function CircuitBuilder() {
     }));
     return out;
   }, [grid]);
+  useEffect(() => { onOps?.(ops); }, [ops, onOps]);
   const state = useMemo(() => runCircuit(n, ops), [n, ops]);
   const probs = probabilities(state);
 
@@ -54,6 +66,10 @@ export default function CircuitBuilder() {
       g[col][w] = { t: "C", target: t };
       g[col][t] = { t: "T", control: w };
     } else g[col][w] = { t: tl };
+    if (puzzle && countOps(g) > puzzle.maxGates && countOps(g) > countOps(grid)) {
+      setMsg(`Gate budget reached (${puzzle.maxGates}). Remove a gate to place another.`);
+      return;
+    }
     setMsg("");
     setGrid(g);
   };
@@ -88,10 +104,15 @@ export default function CircuitBuilder() {
             className="btn mono cursor-grab" title="Drag onto a slot, or tap then tap a slot"
           >{g}</button>
         ))}
-        <span className="mx-2 hidden h-6 w-px bg-line sm:block" />
-        <span className="text-sm text-soft">Qubits:</span>
-        {[2, 3].map((m) => <button key={m} className="btn" aria-pressed={n === m} onClick={() => changeN(m)}>{m}</button>)}
+        {!compact && (
+          <>
+            <span className="mx-2 hidden h-6 w-px bg-line sm:block" />
+            <span className="text-sm text-soft">Qubits:</span>
+            {[2, 3].map((m) => <button key={m} className="btn" aria-pressed={n === m} onClick={() => changeN(m)}>{m}</button>)}
+          </>
+        )}
         <button className="btn" onClick={() => { setGrid(emptyGrid(n)); setMsg(""); }}>Clear</button>
+        {puzzle && <span className="mono ml-auto text-sm" data-testid="gate-count" aria-live="polite">Gates: {countOps(grid)} / {puzzle.maxGates}</span>}
       </div>
       <p className="text-xs text-muted">
         Drag a gate onto a slot (or tap a gate, then tap slots). Tap a placed gate to remove it; tap a CNOT's ● to move its ⊕ target. {tool && <span className="text-teal">Selected: {tool}. Tap a slot to place it.</span>}
@@ -127,12 +148,12 @@ export default function CircuitBuilder() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      {!compact && <div className="flex flex-wrap gap-2">
         <span className="text-sm text-soft">Examples:</span>
         {PRESETS.map((p, i) => <button key={p.name} className="btn !min-h-8 !py-1 text-xs" onClick={() => loadPreset(i)}>{p.name}</button>)}
-      </div>
+      </div>}
 
-      <div className="card p-4">
+      {!compact && <div className="card p-4">
         <h3 className="font-semibold">Live state</h3>
         <p className="mono mt-2 text-sm break-words">|ψ⟩ = {ketString(state, n)}</p>
         <div className="mt-3 space-y-1.5" aria-label="Basis state probabilities">
@@ -145,7 +166,7 @@ export default function CircuitBuilder() {
           ))}
         </div>
         <p className="mt-3 text-xs text-muted">Gates run left to right on ideal, noise-free qubits starting from |0…0⟩. Basis labels read q0 first. Real hardware adds noise and returns sampled counts, not exact probabilities.</p>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import PrefsMenu from "./PrefsMenu";
 
 const LINKS = [
   { href: "/learn", label: "Learn" },
+  { href: "/play", label: "Play" },
   { href: "/demos", label: "Demos" },
   { href: "/real-world", label: "Real World" },
   { href: "/build-lab", label: "Build Lab" },
