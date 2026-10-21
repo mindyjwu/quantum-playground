@@ -3,16 +3,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { STAGES, type Stage } from "@/data/stages";
 import { LEVEL_EXTRAS } from "@/data/levels";
-import { levelLabel } from "@/lib/prefs";
+import { glossaryOn, levelLabel } from "@/lib/prefs";
+import { annotateBlocks } from "@/lib/glossary";
+import { Segments } from "./GlossaryTerm";
 import { usePrefs } from "./PrefsProvider";
 import { ProgressBar, overallPercent, stageStats, useProgress } from "./Progress";
 import Quiz from "./Quiz";
 
 export default function LearningPath() {
   const [p, setP, ready] = useProgress();
-  const { prefs, ready: prefsReady } = usePrefs();
+  const { prefs, ready: prefsReady, setPrefs } = usePrefs();
   const level = prefsReady ? prefs.level : "intermediate"; // until preferences load, show the standard lessons
   const style = prefs.style;
+  const explain = prefsReady && glossaryOn(prefs); // jargon tooltips
   const [active, setActive] = useState(STAGES[0].id);
   const stage = STAGES.find((s) => s.id === active) as Stage;
   const pct = ready ? overallPercent(p) : 0;
@@ -58,6 +61,12 @@ export default function LearningPath() {
         <h2 className="text-2xl font-semibold">Stage {stage.n}: {stage.title}</h2>
         <p className="mt-1 text-soft">{stage.blurb}</p>
         <p className="mt-2 text-xs text-muted" data-testid="viewing-as">Viewing as <span className="font-semibold text-soft">{levelLabel(level)}</span>. Change this any time with the ⚙ button at the top.</p>
+        {prefsReady && (
+          <label className="mt-2 inline-flex cursor-pointer items-start gap-2 text-sm text-soft">
+            <input type="checkbox" checked={explain} onChange={(e) => setPrefs({ glossary: e.target.checked })} className="mt-0.5 h-4 w-4 accent-[var(--accent)]" />
+            <span>Explain jargon <span className="block text-xs text-muted sm:ml-1 sm:inline">(tap a dotted word for a plain-English definition)</span></span>
+          </label>
+        )}
 
         <div className="mt-5 space-y-4">
           {stage.lessons.map((l) => {
@@ -73,9 +82,13 @@ export default function LearningPath() {
                 </div>
                 {(() => {
                   const x = LEVEL_EXTRAS[l.id];
+                  const plain = level === "beginner" && x ? x.plain : [];
+                  const segs = explain ? annotateBlocks([...plain, ...l.body]) : null; // each term is marked once per lesson
+                  const segPlain = segs ? segs.slice(0, plain.length) : null;
+                  const segBody = segs ? segs.slice(plain.length) : null;
                   const full = (
                     <>
-                      <div className="mt-2 space-y-3 text-[0.95rem] leading-relaxed text-soft">{l.body.map((b, i) => <p key={i}>{b}</p>)}</div>
+                      <div className="mt-2 space-y-3 text-[0.95rem] leading-relaxed text-soft">{l.body.map((b, i) => <p key={i}>{segBody ? <Segments segments={segBody[i]} /> : b}</p>)}</div>
                       {l.math && <pre className="mono mt-3 overflow-x-auto rounded-xl border border-line bg-card2 p-3 text-sm text-ink">{l.math.join("\n")}</pre>}
                     </>
                   );
@@ -85,7 +98,7 @@ export default function LearningPath() {
                         <>
                           <div className="mt-3 rounded-xl border border-teal/40 bg-teal/10 p-3">
                             <p className="text-xs font-semibold tracking-wide text-teal uppercase">In plain language</p>
-                            {x.plain.map((t, i) => <p key={i} className="mt-1 text-[0.95rem] leading-relaxed text-ink">{t}</p>)}
+                            {x.plain.map((t, i) => <p key={i} className="mt-1 text-[0.95rem] leading-relaxed text-ink">{segPlain ? <Segments segments={segPlain[i]} /> : t}</p>)}
                           </div>
                           <details className="mt-3 text-sm"><summary className="cursor-pointer text-soft">Read the fuller explanation and the math</summary>{full}</details>
                         </>

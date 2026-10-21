@@ -45,6 +45,13 @@ intermediate and expert puzzles judge the full state including phase. Progress i
 The home page's **constellation** lights one star per completed lesson, quiz or puzzle (31 in total). **Mindy's Space** (`/mindy`) is
 written from `src/data/mindy.ts`; edit that file to update it.
 
+## Glossary tooltips
+`src/data/glossary.ts` holds ~50 plain-English terms (`match` lists every wording to recognize). On the Learn page each term is underlined the
+first time it appears in a lesson (`src/lib/glossary.ts`) and explains itself on tap, click, hover or keyboard (Enter/Space; Escape closes).
+It is on by default for beginners and toggleable for everyone (`prefs.glossary`, `null` = follow the level). `/glossary` lists all terms with search.
+Annotating never changes the text: a test joins the segments of every lesson paragraph and compares with the original.
+Note: position the popover with `left`, not `transform`; the fade-in animation owns `transform` and would undo a sideways nudge.
+
 ## Space theme
 Dark mode is the default: a true-black page (`--bg: #000`) with a canvas starfield (`src/components/StarField.tsx`, logic and tests in
 `src/lib/stars.ts`) and an "event horizon" glow on the home hero. The sky is deterministic (seeded), capped at 2x pixel density and ~30fps,

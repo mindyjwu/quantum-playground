@@ -113,3 +113,8 @@ h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.01em; }
 
 .star-glow { animation: star-glow 3.6s ease-in-out infinite; }
 @keyframes star-glow { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.3; } }
+
+/* Glossary terms: a quiet dotted underline so they read as text first, help second. */
+.term { all: unset; cursor: help; text-decoration: underline dotted var(--accent) 1.5px; text-underline-offset: 3px; color: inherit; border-radius: 3px; }
+.term:hover, .term[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

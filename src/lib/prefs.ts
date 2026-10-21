@@ -1,9 +1,16 @@
 export type Level = "beginner" | "intermediate" | "expert";
 export type PlayStyle = "cozy" | "instrument";
-export type Prefs = { level: Level; style: PlayStyle; welcomed: boolean };
+export type Prefs = {
+  level: Level; style: PlayStyle; welcomed: boolean;
+  /** Underline jargon and explain it on tap/hover. null = follow the level (on for beginners). */
+  glossary: boolean | null;
+};
 
 export const PREFS_KEY = "qp.prefs.v1";
-export const DEFAULT_PREFS: Prefs = { level: "intermediate", style: "cozy", welcomed: false };
+export const DEFAULT_PREFS: Prefs = { level: "intermediate", style: "cozy", welcomed: false, glossary: null };
+
+/** Explicit choice wins; otherwise beginners get it. */
+export const glossaryOn = (p: Prefs): boolean => p.glossary ?? p.level === "beginner";
 
 export const LEVELS: { id: Level; label: string; blurb: string }[] = [
   { id: "beginner", label: "Beginner", blurb: "New to quantum. Plain language first, the math tucked away, and hints when you want them." },
@@ -43,5 +50,6 @@ export function normalizePrefs(raw: unknown): Prefs {
     level: LEVELS.some((l) => l.id === r.level) ? (r.level as Level) : DEFAULT_PREFS.level,
     style: STYLES.some((s) => s.id === r.style) ? (r.style as PlayStyle) : DEFAULT_PREFS.style,
     welcomed: r.welcomed === true,
+    glossary: typeof r.glossary === "boolean" ? r.glossary : null,
   };
 }

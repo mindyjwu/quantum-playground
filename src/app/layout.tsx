@@ -36,6 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </PrefsProvider>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">
           <nav aria-label="Footer" className="mb-3 flex flex-wrap gap-x-5 gap-y-1">
+            <Link className="text-soft hover:text-ink" href="/glossary">Glossary</Link>
             <Link className="text-soft hover:text-ink" href="/mindy">Mindy's Space</Link>
             <a className="text-soft hover:text-ink" href="https://github.com/mindyjwu/quantum-playground" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a>
           </nav>
