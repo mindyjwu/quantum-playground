@@ -5,6 +5,8 @@ export type Maturity = "in-use" | "emerging" | "experimental";
 export type RealWorldCard = {
   id: string; name: string; maturity: Maturity; maturityNote: string;
   principle: string; impact: string; caveat: string; sources: Source[];
+  /** Optional link to a hands-on demo for this technology. */
+  tryIt?: { label: string; href: string };
 };
 
 export const MATURITY_META: Record<Maturity, { label: string; blurb: string }> = {
@@ -59,6 +61,7 @@ export const REAL_WORLD: RealWorldCard[] = [
   },
   {
     id: "quantum-computing", name: "Quantum computing", maturity: "emerging",
+    tryIt: { label: "See how gate noise hurts a circuit", href: "/demos#circuit" },
     maturityNote: "Cloud-accessible machines exist; no broadly useful advantage demonstrated yet.",
     principle: "Qubits in superposition plus interference and entanglement let some algorithms (Shor, quantum simulation) scale better than known classical methods.",
     impact: "Potential long-term impact on chemistry, materials and cryptanalysis. Today it is mainly used for research, benchmarking and learning.",
@@ -90,6 +93,7 @@ export const REAL_WORLD: RealWorldCard[] = [
   },
   {
     id: "qkd", name: "Quantum key distribution (QKD)", maturity: "emerging",
+    tryIt: { label: "Catch an eavesdropper in the BB84 demo", href: "/demos#bb84" },
     maturityNote: "Commercial links and satellite demos exist; limited deployment.",
     principle: "Eavesdropping on quantum states (e.g. photon polarization) disturbs them, so two parties can detect interception while establishing a shared key.",
     impact: "Niche high-security links; China's Micius satellite demonstrated satellite-to-ground QKD in 2017.",

@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { termById } from "@/data/glossary";
+import { glossaryOn } from "@/lib/prefs";
 import type { Segment } from "@/lib/glossary";
+import { usePrefs } from "./PrefsProvider";
 
 /**
  * A jargon word that explains itself. Works by tap/click, keyboard (Enter/Space) and mouse hover; closes on Escape,
@@ -70,7 +72,12 @@ export function GlossaryTerm({ id, children }: { id: string; children: React.Rea
   );
 }
 
-/** Renders annotated segments: plain text stays text, terms become tap-to-define. */
+/**
+ * Renders annotated segments. Terms become tap-to-define only when the visitor has "Explain jargon" on; otherwise it's plain text,
+ * exactly the original wording. Reads the setting itself, so server-rendered pages can pass in pre-annotated segments.
+ */
 export function Segments({ segments }: { segments: Segment[] }) {
+  const { prefs, ready } = usePrefs();
+  if (!ready || !glossaryOn(prefs)) return <>{segments.map((s) => s.text).join("")}</>;
   return <>{segments.map((s, i) => (s.type === "term" ? <GlossaryTerm key={i} id={s.id}>{s.text}</GlossaryTerm> : <span key={i}>{s.text}</span>))}</>;
 }

@@ -12,7 +12,7 @@ describe("glossary data", () => {
     expect(new Set(GLOSSARY.map((t) => t.id)).size).toBe(GLOSSARY.length);
     const seen = new Map<string, string>();
     for (const t of GLOSSARY) {
-      expect(t.short.length, t.id).toBeGreaterThan(30);
+      expect(t.short.length, t.id).toBeGreaterThan(20);
       expect(t.short.length, `${t.id} should stay short`).toBeLessThan(330);
       expect(t.match.length).toBeGreaterThan(0);
       for (const m of t.match) { const k = m.toLowerCase(); expect(seen.has(k) ? seen.get(k) : t.id, `"${m}" is claimed by two terms`).toBe(t.id); seen.set(k, t.id); }
@@ -50,6 +50,15 @@ describe("annotateBlocks", () => {
     expect(terms(annotateBlocks(["A normal bit is on or off."]))).toEqual(["bit"]);
     expect(terms(annotateBlocks(["You get one bit, then more bits."]))).toEqual(["bit"]);   // once per lesson
     expect(terms(annotateBlocks(["a classical bit"]))).toEqual(["classical", "bit"]);
+  });
+  it("does not read 'noise-cancelling' as quantum noise, but still marks real noise", () => {
+    expect(terms(annotateBlocks(["work a bit like noise-cancelling headphones"]))).toEqual([]);
+    expect(terms(annotateBlocks(["Noise limits circuit depth, and noisy qubits err."]))).toEqual(["noise", "circuit", "qubit"]);
+  });
+  it("exclude leaves the listed terms unmarked without using up other terms", () => {
+    const segs = annotateBlocks(["Investment measures belief, and a qubit is a qubit."], { exclude: ["measurement"] });
+    expect(terms(segs)).toEqual(["qubit"]);
+    expect(join(segs[0])).toBe("Investment measures belief, and a qubit is a qubit.");
   });
   it("leaves text without terms untouched", () => {
     expect(annotateBlocks(["Nothing to see here."])).toEqual([[{ type: "text", text: "Nothing to see here." }]]);

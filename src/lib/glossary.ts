@@ -12,7 +12,7 @@ for (const t of GLOSSARY) for (const m of t.match) {
   lookup.set(norm(m).replace(/\s+/g, " "), t.id);
   // A guard such as (?<!\b(?:a|an)\s) stops "a bit like" from being read as the unit "bit".
   const guard = t.avoidAfter?.length ? `(?<!\\b(?:${t.avoidAfter.join("|")})\\s)` : "";
-  parts.push({ alias: m, pattern: guard + escape(m) });
+  parts.push({ alias: m, pattern: guard + escape(m) + (t.notFollowedBy ? `(?!${t.notFollowedBy})` : "") });
 }
 parts.sort((a, b) => b.alias.length - a.alias.length);
 const PATTERN = `(?<![\\p{L}\\p{N}_])(?:${parts.map((p) => p.pattern).join("|")})(?![\\p{L}\\p{N}_])`;
@@ -21,7 +21,12 @@ const PATTERN = `(?<![\\p{L}\\p{N}_])(?:${parts.map((p) => p.pattern).join("|")}
  * Splits blocks of text into plain and term segments. Each term is marked only the first time it appears across all the blocks
  * (pass a lesson's paragraphs together), so the page doesn't fill up with underlines. Joining a block's segments always gives back the original text.
  */
-export function annotateBlocks(blocks: string[]): Segment[][] {
+export type AnnotateOptions = {
+  /** Term ids to leave alone on this page, because the page uses the word in its everyday sense (e.g. "measurement" on a finance page). */
+  exclude?: string[];
+};
+
+export function annotateBlocks(blocks: string[], opts: AnnotateOptions = {}): Segment[][] {
   const seen = new Set<string>();
   return blocks.map((text) => {
     const out: Segment[] = [];
@@ -29,7 +34,7 @@ export function annotateBlocks(blocks: string[]): Segment[][] {
     let last = 0, m: RegExpExecArray | null;
     while ((m = re.exec(text))) {
       const id = lookup.get(norm(m[0]).replace(/\s+/g, " "));
-      if (!id || seen.has(id)) continue;
+      if (!id || seen.has(id) || opts.exclude?.includes(id)) continue;
       seen.add(id);
       if (m.index > last) out.push({ type: "text", text: text.slice(last, m.index) });
       out.push({ type: "term", text: m[0], id });

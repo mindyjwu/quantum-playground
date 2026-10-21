@@ -1,6 +1,12 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { MATURITY_META, REAL_WORLD, type Maturity } from "@/data/realworld";
+import { annotateBlocks } from "@/lib/glossary";
+import { Segments } from "./GlossaryTerm";
+
+// "measurement" appears here in its everyday sense ("precision measurement"), so don't attach the quantum definition
+const PAGE_OPTS = { exclude: ["measurement"] };
 
 const TAG_STYLE: Record<Maturity, string> = {
   "in-use": "border-teal/50 text-teal",
@@ -27,6 +33,7 @@ export default function RealWorldExplorer() {
 
       <div className="mt-6 grid items-start gap-4 sm:grid-cols-2">
         {items.map((c) => {
+          const [segPrinciple, segImpact, segCaveat] = annotateBlocks([c.principle, c.impact, c.caveat], PAGE_OPTS); // each term marked once per card
           const isOpen = open === c.id;
           return (
             <article key={c.id} className="card fade-in flex flex-col p-5">
@@ -36,16 +43,17 @@ export default function RealWorldExplorer() {
               </div>
               <p className="mt-1 text-xs text-muted">{c.maturityNote}</p>
               <dl className="mt-3 space-y-2 text-sm">
-                <div><dt className="font-semibold text-ink">Quantum principle</dt><dd className="text-soft">{c.principle}</dd></div>
-                <div><dt className="font-semibold text-ink">Real-world impact</dt><dd className="text-soft">{c.impact}</dd></div>
+                <div><dt className="font-semibold text-ink">Quantum principle</dt><dd className="text-soft"><Segments segments={segPrinciple} /></dd></div>
+                <div><dt className="font-semibold text-ink">Real-world impact</dt><dd className="text-soft"><Segments segments={segImpact} /></dd></div>
               </dl>
-              <button className="btn mt-4 self-start" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : c.id)}>
+              {c.tryIt && <Link href={c.tryIt.href} className="btn btn-primary mt-4 self-start">{c.tryIt.label} →</Link>}
+              <button className="btn mt-3 self-start" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : c.id)}>
                 {isOpen ? "Hide" : "Show"} honest caveat &amp; sources
               </button>
               {isOpen && (
                 <div className="fade-in mt-3 rounded-xl border border-line bg-card2 p-3 text-sm">
                   <p className="font-semibold text-amber">Caveat</p>
-                  <p className="mt-1 text-soft">{c.caveat}</p>
+                  <p className="mt-1 text-soft"><Segments segments={segCaveat} /></p>
                   <p className="mt-3 font-semibold">Sources</p>
                   <ul className="mt-1 list-disc pl-5 text-soft">
                     {c.sources.map((s) => (

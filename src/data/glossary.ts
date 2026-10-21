@@ -6,6 +6,8 @@ export type Term = {
   id: string; term: string; match: string[]; short: string;
   /** Words that, directly before a match, mean it's something else (e.g. the idiom "a bit like"). */
   avoidAfter?: string[];
+  /** Regex source that, directly after a match, means it's something else (e.g. "-cancel" for "noise-cancelling headphones"). */
+  notFollowedBy?: string;
 };
 
 export const GLOSSARY: Term[] = [
@@ -43,7 +45,7 @@ export const GLOSSARY: Term[] = [
   { id: "nisq", term: "NISQ", match: ["NISQ"], short: "“Noisy Intermediate-Scale Quantum”: today's quantum computers, with tens to thousands of noisy qubits and no full error correction. The term was coined by John Preskill." },
   { id: "variational", term: "Variational algorithm (VQE, QAOA)", match: ["variational algorithms", "variational", "VQE", "QAOA"], short: "A hybrid method: a short quantum circuit with adjustable settings, while an ordinary computer tunes the settings. Popular on today's hardware, but not proven to beat the best classical methods." },
   { id: "barren-plateau", term: "Barren plateau", match: ["barren plateaus", "barren plateau"], short: "A flat “landscape” where the training signal almost vanishes, which makes a variational circuit nearly impossible to tune." },
-  { id: "noise", term: "Noise", match: ["noise", "noisy"], short: "Unwanted disturbances that make qubits and gates make mistakes." },
+  { id: "noise", term: "Noise", match: ["noise", "noisy"], notFollowedBy: "-cancel", short: "Unwanted disturbances that make qubits and gates make mistakes." },
   { id: "error-correction", term: "Error correction", match: ["error correction", "error-corrected"], short: "Spreading one qubit's information over many physical qubits so mistakes can be detected and fixed without destroying the information." },
   { id: "logical-qubit", term: "Logical qubit", match: ["logical qubit", "logical qubits"], short: "A reliable qubit built from many error-prone physical qubits using error correction." },
   { id: "physical-qubit", term: "Physical qubit", match: ["physical qubit", "physical qubits"], short: "An actual qubit in the hardware. Real ones are noisy, so many are needed to make one logical qubit." },
@@ -61,6 +63,73 @@ export const GLOSSARY: Term[] = [
   { id: "key-exchange", term: "Key exchange", match: ["key exchange", "key establishment", "key-encapsulation"], short: "A way for two parties to agree on a shared secret key over an open channel." },
   { id: "ml-kem", term: "ML-KEM", match: ["ML-KEM"], short: "A post-quantum key-exchange method standardized by NIST in 2024 (FIPS 203)." },
   { id: "nist", term: "NIST", match: ["NIST"], short: "The US National Institute of Standards and Technology, which publishes technical standards, including the first post-quantum ones." },
+
+  // --- Real World, Think Bigger and Build Lab ---
+  { id: "qkd", term: "Quantum key distribution (QKD)", match: ["quantum key distribution", "QKD"], short: "Using quantum states of light to agree on a secret key in a way that lets the two sides detect eavesdropping. It needs special hardware and doesn't, on its own, prove who you're talking to." },
+  { id: "crqc", term: "CRQC", match: ["cryptographically relevant quantum computer", "CRQC"], short: "A “cryptographically relevant quantum computer”: one powerful and reliable enough to break today's public-key encryption, such as RSA-2048. None exists today." },
+  { id: "trusted-relay", term: "Trusted relay", match: ["trusted relays", "trusted relay"], short: "In some QKD networks, an intermediate station that must itself be trusted, because it briefly holds the key." },
+  { id: "quantum-repeater", term: "Quantum repeater", match: ["quantum repeaters", "quantum repeater", "repeaters"], short: "A device that extends how far entanglement can be shared across a network by joining shorter links. It can't just copy the signal, because quantum states can't be copied." },
+  { id: "photon", term: "Photon", match: ["photon", "photons"], short: "A single particle of light." },
+  { id: "circuit", term: "Quantum circuit", match: ["quantum circuit", "quantum circuits", "circuit", "circuits"], short: "A sequence of gates applied to qubits, ending in measurements. It's drawn as wires (the qubits) with gates along them." },
+  { id: "transpile", term: "Transpile", match: ["transpiling", "transpiled", "transpiler", "transpile"], short: "Rewriting a circuit into the specific gates and qubit layout a particular quantum chip supports, optimizing as it goes." },
+  { id: "backend", term: "Backend", match: ["backend"], short: "The device that runs your circuit: a real quantum chip or a simulator." },
+  { id: "qpu", term: "QPU", match: ["QPU", "quantum processing unit"], short: "Quantum processing unit: the quantum chip itself. “QPU time” is how long your job actually runs on it, which is scarce on free plans." },
+  { id: "shot", term: "Shot", match: ["shots", "shot"], short: "One run of a circuit from start to measurement. Each run gives one random outcome, so you repeat many shots and count the results." },
+  { id: "shot-noise", term: "Shot noise", match: ["shot noise"], short: "The random wobble in results because you only take a finite number of shots. More shots shrink it (roughly with the square root of the number of shots)." },
+  { id: "sampler", term: "Sampler", match: ["SamplerV2", "sampler"], short: "In Qiskit, the tool that runs a circuit many times and returns how often each measured result occurred." },
+  { id: "qiskit", term: "Qiskit", match: ["Qiskit"], short: "IBM's open-source Python toolkit for building and running quantum circuits, including on IBM's real hardware." },
+  { id: "cirq", term: "Cirq", match: ["Cirq"], short: "Google Quantum AI's open-source Python library for building and simulating quantum circuits." },
+  { id: "pennylane", term: "PennyLane", match: ["PennyLane"], short: "Xanadu's open-source Python library for programming quantum circuits that can be trained like machine-learning models." },
+  { id: "api-key", term: "API key", match: ["API key"], short: "A secret code that identifies your account to an online service. Treat it like a password." },
+  { id: "noise-model", term: "Noise model", match: ["noise model"], short: "A description of how a device's errors behave, used to make a simulator imitate real hardware." },
+  { id: "decoherence", term: "Decoherence", match: ["decoherence", "coherence"], short: "The loss of a qubit's quantum behavior as it interacts with its surroundings. A main source of errors." },
+  { id: "ghz", term: "GHZ state", match: ["GHZ state", "GHZ"], short: "An entangled state of three or more qubits, like (|000⟩ + |111⟩)/√2, where all the qubits agree when measured." },
+  { id: "loophole", term: "Loophole", match: ["loopholes", "loophole"], short: "A gap in a Bell-test experiment that could let a non-quantum explanation survive. A “loophole-free” test closes all the main ones." },
+  { id: "hamiltonian", term: "Hamiltonian", match: ["Hamiltonian"], short: "A mathematical description of a system's energy. Finding its lowest energy (the ground state) is a central task in quantum chemistry." },
+  { id: "optimizer", term: "Optimizer", match: ["classical optimizer", "optimizer"], short: "The ordinary-computer routine that adjusts a circuit's settings to improve a score." },
+  { id: "ansatz", term: "Ansatz", match: ["ansatz", "ansätze"], short: "The chosen shape of a circuit with adjustable settings, which the optimizer then tunes." },
+  { id: "tunneling", term: "Quantum tunneling", match: ["quantum tunneling", "tunneling", "tunnelling"], short: "When a particle passes through a barrier it couldn't cross in classical physics. It's useful in flash memory and a leakage problem in tiny transistors." },
+  { id: "spin", term: "Spin", match: ["nuclear spin", "spins", "spin"], short: "A quantum property of particles that behaves like the direction of a tiny magnet and takes only certain values (like up or down)." },
+  { id: "energy-levels", term: "Energy levels and bands", match: ["energy bands", "energy levels", "energy level"], short: "The specific energies that electrons in an atom (levels) or a solid (bands) are allowed to have. They can't sit in between." },
+  { id: "semiconductor", term: "Semiconductor", match: ["semiconductors", "semiconductor"], short: "A material whose ability to conduct electricity can be controlled. It's the basis of transistors and chips." },
+  { id: "stimulated-emission", term: "Stimulated emission", match: ["stimulated emission"], short: "When a passing photon triggers an excited atom to release an identical photon. It's what makes laser light." },
+  { id: "hyperfine", term: "Hyperfine transition", match: ["hyperfine transition"], short: "A tiny, extremely precise energy change inside an atom (here cesium-133) that is used to define the second." },
+  { id: "atomic-clock", term: "Atomic clock", match: ["atomic clocks", "atomic clock"], short: "A clock that keeps time by counting the vibrations of atoms, which are extremely steady." },
+  { id: "relativity", term: "Relativity", match: ["relativity"], short: "Einstein's theory of space, time and gravity. It changes how fast clocks run in orbit, which GPS has to correct for." },
+  { id: "floating-gate", term: "Floating gate", match: ["floating gate"], short: "The tiny electrically isolated layer inside flash memory that traps electrons to store data." },
+  { id: "nv-center", term: "Nitrogen-vacancy (NV) center", match: ["nitrogen-vacancy (NV) centers", "nitrogen-vacancy", "NV centers", "NV center"], short: "A tiny defect in diamond whose quantum spin is extremely sensitive to magnetic fields, which makes it usable as a sensor." },
+  { id: "cold-atoms", term: "Cold atoms", match: ["cold atoms"], short: "Atoms cooled to almost absolute zero, which makes their quantum behavior easy to control and measure. Used in clocks and sensors." },
+  { id: "magnetometry", term: "Magnetometry", match: ["magnetometry"], short: "Measuring magnetic fields." },
+  { id: "gravimetry", term: "Gravimetry", match: ["gravimetry"], short: "Measuring tiny differences in gravity, for example to find underground structures." },
+  { id: "topological-qubit", term: "Topological qubit", match: ["topological qubits", "topological qubit", "topological modes", "topological"], short: "A proposed kind of qubit that stores information in a collective property, so small local disturbances can't easily corrupt it. Not yet convincingly demonstrated." },
+  { id: "quasiparticle", term: "Quasiparticle", match: ["quasiparticles", "quasiparticle"], short: "A collective behavior of many particles that acts like a single particle." },
+  { id: "majorana", term: "Majorana", match: ["Majorana"], short: "A hypothetical kind of quasiparticle (its own antiparticle) proposed as a building block for topological qubits. Experimental claims are disputed." },
+  { id: "lattice-based", term: "Lattice-based cryptography", match: ["lattice-based"], short: "A family of post-quantum methods whose security rests on hard problems about points on high-dimensional grids (lattices)." },
+  { id: "hash-based", term: "Hash-based signatures", match: ["hash-based signatures", "hash-based"], short: "Digital signatures built only from hash functions. They're widely trusted because their security assumptions are minimal." },
+  { id: "crypto-agility", term: "Crypto-agility", match: ["crypto-agility", "crypto agility"], short: "Designing systems so that cryptographic algorithms can be swapped without rewriting everything." },
+  { id: "crypto-inventory", term: "Cryptographic inventory", match: ["cryptographic inventory", "cryptographic inventories"], short: "A list of where and how an organization uses cryptography (algorithms, key sizes, certificates). The first step in migrating to post-quantum cryptography." },
+  { id: "fips", term: "FIPS", match: ["FIPS"], short: "Federal Information Processing Standards: official US government technology standards, such as FIPS 203." },
+  { id: "ml-dsa", term: "ML-DSA", match: ["ML-DSA"], short: "A lattice-based post-quantum digital-signature standard (FIPS 204)." },
+  { id: "slh-dsa", term: "SLH-DSA", match: ["SLH-DSA"], short: "A post-quantum digital-signature standard (FIPS 205) built only from hash functions." },
+  { id: "fn-dsa", term: "FN-DSA", match: ["FN-DSA"], short: "A compact post-quantum digital-signature standard based on Falcon, planned as FIPS 206." },
+  { id: "hqc", term: "HQC", match: ["HQC"], short: "A backup post-quantum encryption algorithm selected by NIST in 2025. It's built on error-correcting codes, a different kind of math from ML-KEM." },
+  { id: "cnsa", term: "CNSA 2.0", match: ["CNSA 2.0", "CNSA"], short: "The US NSA's list of required algorithms and migration dates for national security systems moving to post-quantum cryptography." },
+  { id: "darpa", term: "DARPA", match: ["DARPA's", "DARPA"], short: "The US Defense Advanced Research Projects Agency, which funds ambitious, high-risk technology research." },
+  { id: "qbi", term: "Quantum Benchmarking Initiative (QBI)", match: ["Quantum Benchmarking Initiative", "QBI's", "QBI"], short: "A DARPA program testing whether a useful quantum computer can be built by 2033, with independent checking of companies' claims." },
+  { id: "hpc", term: "HPC", match: ["HPC", "high-performance computing"], short: "High-performance computing: supercomputers and clusters used for heavy scientific calculation." },
+  { id: "sdk", term: "SDK", match: ["SDK"], short: "Software development kit: a library of tools for building programs for a platform." },
+  { id: "benchmark", term: "Benchmarking", match: ["benchmarking", "benchmarks", "benchmark"], short: "Measuring performance with a standard test so different machines can be compared fairly." },
+  { id: "resource-estimation", term: "Resource estimation", match: ["resource-estimation studies", "resource estimates", "resource estimation", "resource estimate"], short: "Working out how many qubits and gates an algorithm would need, to see when it could run on real hardware." },
+
+  // --- BB84 and noise demos ---
+  { id: "bb84", term: "BB84", match: ["BB84"], short: "The first quantum key distribution protocol (Bennett and Brassard, 1984). Alice sends qubits prepared in random bases, Bob measures in random bases, and they keep the results where their bases matched. A spy can't measure without disturbing the qubits, which shows up as errors." },
+  { id: "sifting", term: "Sifting", match: ["sifting", "sifted"], short: "Keeping only the bits where Alice and Bob happened to use the same basis, and discarding the rest." },
+  { id: "qber", term: "Quantum bit error rate (QBER)", match: ["quantum bit error rate", "QBER"], short: "The fraction of compared key bits where Alice and Bob disagree. In BB84 a high value points to a spy or too much noise." },
+  { id: "intercept-resend", term: "Intercept-and-resend attack", match: ["intercept-and-resend", "intercept and resend"], short: "An eavesdropper measures each qubit and sends a new one on to the receiver. Because she has to guess the basis, she causes errors in about a quarter of the kept bits." },
+  { id: "privacy-amplification", term: "Privacy amplification", match: ["privacy amplification"], short: "Shrinking a partly leaked key into a shorter one that an eavesdropper knows essentially nothing about." },
+  { id: "authenticated-channel", term: "Authenticated channel", match: ["authenticated classical channel", "authenticated channel"], short: "A communication line where each side can verify who sent the messages. QKD needs one for its public discussion, or a spy could pose as Alice or Bob." },
+  { id: "depolarizing", term: "Depolarizing noise", match: ["depolarizing noise", "depolarizing"], short: "A simple error model: with some probability, a gate is followed by a random flip of the qubit (X, Y or Z)." },
+  { id: "fidelity", term: "Fidelity", match: ["fidelity"], short: "How close a real (noisy) state is to the ideal one. 100% means identical." },
 ];
 
 export const termById = (id: string) => GLOSSARY.find((t) => t.id === id);

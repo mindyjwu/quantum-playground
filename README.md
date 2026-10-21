@@ -46,10 +46,10 @@ The home page's **constellation** lights one star per completed lesson, quiz or 
 written from `src/data/mindy.ts`; edit that file to update it.
 
 ## Glossary tooltips
-`src/data/glossary.ts` holds ~50 plain-English terms (`match` lists every wording to recognize). On the Learn page each term is underlined the
-first time it appears in a lesson (`src/lib/glossary.ts`) and explains itself on tap, click, hover or keyboard (Enter/Space; Escape closes).
+`src/data/glossary.ts` holds ~110 plain-English terms (`match` lists every wording to recognize). On Learn, Real World, Think Bigger and Build Lab each term is underlined the
+first time it appears in a block of text (`src/lib/glossary.ts`) and explains itself on tap, click, hover or keyboard (Enter/Space; Escape closes).
 It is on by default for beginners and toggleable for everyone (`prefs.glossary`, `null` = follow the level). `/glossary` lists all terms with search.
-Annotating never changes the text: a test joins the segments of every lesson paragraph and compares with the original.
+Words that are also everyday English can be kept out per page with `annotateBlocks(blocks, {exclude})` (e.g. "measurement" on Real World / Think Bigger), or guarded in the term itself with `avoidAfter` / `notFollowedBy` ("a bit like", "noise-cancelling"). Annotating never changes the text: a test joins the segments of every lesson paragraph and compares with the original.
 Note: position the popover with `left`, not `transform`; the fade-in animation owns `transform` and would undo a sideways nudge.
 
 ## Space theme
@@ -73,6 +73,15 @@ exits with code 2 because the run isn't meaningful (offline, proxy, rate limit).
 Each resource records where its URL came from (`urlBasis`) and, once checked, `verified: "YYYY-MM-DD"` in `src/data/resources.ts`;
 the UI shows a ✓ for verified links. All 12 resources were verified on 2026-10-08 (53 of 54 links OK; the other, a Science DOI,
 returned 403 to the script). A passing check means the page loads, not that its content still matches our description.
+
+## Simulators beyond ideal qubits
+- **Noise slider** (Circuit builder on `/demos`): `src/lib/density.ts` is an exact density-matrix simulator with depolarizing noise after every gate
+  (single-qubit rate = slider/10, two-qubit rate = slider). It shows ideal vs noisy probabilities, fidelity, and "Run 1000 shots". It is a
+  teaching model, not a calibrated model of any real device.
+- **BB84 key exchange** (`/demos#bb84`): `src/lib/bb84.ts` plays the protocol round by round (seeded: add `?seed=7` to reproduce a run). Simplified on
+  purpose: perfect sources/detectors, an intercept-resend spy, no privacy amplification. Compared bits are a random half of the sifted key, so with 64
+  qubits a spy still slips by about 9% of the time (measured: 36% at 16 qubits, 17% at 32, 9% at 64, 3% at 128). The UI explains this when it happens.
+- Tests: `tests/density.test.ts`, `tests/bb84.test.ts`, `tests/glossary-pages.test.ts`.
 
 ## Structure
 - `src/lib/quantum.ts` — state-vector simulator (H, X, Z, CNOT, Bloch vectors, sampling). Qubit 0 is the leftmost bit. Tested in `tests/`.

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import GoalsNotes from "@/components/GoalsNotes";
 import HypeCheck from "@/components/HypeCheck";
+import { Segments } from "@/components/GlossaryTerm";
+import { annotateBlocks } from "@/lib/glossary";
 import { FACTS, HORIZON, KIND_META, LANES, PATHS, THINK_SOURCES, type ClaimKind } from "@/data/think-bigger";
 
 export const metadata = { title: "Think Bigger" };
@@ -22,7 +24,15 @@ const Links = ({ items }: { items: { label: string; url: string }[] }) => (
   </ul>
 );
 
+// "measurement" is used in its everyday sense here ("Investment measures belief"), so don't attach the quantum definition.
+const GLOSS = { exclude: ["measurement"] };
+
 export default function Page() {
+  // Annotated on the server (pure), rendered by <Segments>, which shows plain text unless the visitor has "Explain jargon" on.
+  const factSegs = FACTS.map((f) => annotateBlocks([f.text, f.caveat], GLOSS));
+  const horizonSegs = HORIZON.map((h) => annotateBlocks(h.items.map((i) => i.what), GLOSS));
+  const laneSegs = LANES.map((l) => annotateBlocks([l.why, ...l.build, ...l.risks, ...l.first30], GLOSS));
+  const pathSegs = PATHS.map((p) => annotateBlocks([p.blurb, p.next], GLOSS));
   return (
     <div className="fade-in space-y-14">
       <header>
@@ -43,14 +53,14 @@ export default function Page() {
         <h2 id="state" className="text-2xl font-semibold">The state of play</h2>
         <p className="mt-1 max-w-2xl text-soft">Four facts that frame everything else, each labeled by what kind of claim it is. Hover a label for its meaning.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {FACTS.map((f) => (
+          {FACTS.map((f, fi) => (
             <article key={f.id} className="card flex flex-col p-5">
               <div className="flex items-start justify-between gap-3">
                 <p className="mono text-2xl text-accent">{f.big}</p><Tag kind={f.kind} />
               </div>
               <h3 className="mt-2 text-lg font-semibold">{f.title}</h3>
-              <p className="mt-1 text-sm text-soft">{f.text}</p>
-              <p className="mt-2 text-sm"><span className="font-semibold text-amber">Caveat: </span><span className="text-soft">{f.caveat}</span></p>
+              <p className="mt-1 text-sm text-soft"><Segments segments={factSegs[fi][0]} /></p>
+              <p className="mt-2 text-sm"><span className="font-semibold text-amber">Caveat: </span><span className="text-soft"><Segments segments={factSegs[fi][1]} /></span></p>
               <Links items={f.sources} />
             </article>
           ))}
@@ -61,14 +71,14 @@ export default function Page() {
         <h2 id="heading" className="text-2xl font-semibold">Where it's heading</h2>
         <p className="mt-1 max-w-2xl text-soft">Dates from regulators are firmer than dates from vendors, and both are firmer than forecasts. We've labeled every entry so you can see which is which.</p>
         <div className="mt-5 grid gap-4 lg:grid-cols-3">
-          {HORIZON.map((h) => (
+          {HORIZON.map((h, hi) => (
             <div key={h.span} className="card p-5">
               <h3 className="text-lg font-semibold">{h.span}</h3>
               <ul className="mt-3 space-y-3">
-                {h.items.map((i) => (
+                {h.items.map((i, ii) => (
                   <li key={i.when + i.what} className="text-sm">
                     <div className="flex items-center gap-2"><span className="mono font-semibold">{i.when}</span><Tag kind={i.kind} /></div>
-                    <p className="mt-1 text-soft">{i.what}</p>
+                    <p className="mt-1 text-soft"><Segments segments={horizonSegs[hi][ii]} /></p>
                   </li>
                 ))}
               </ul>
@@ -86,11 +96,11 @@ export default function Page() {
             <article key={l.id} className="card p-5 sm:p-6">
               <p className="text-xs text-muted">Lane {idx + 1} · {l.stage}</p>
               <h3 className="mt-0.5 text-xl font-semibold">{l.title}</h3>
-              <p className="mt-2 text-[0.95rem] leading-relaxed text-soft">{l.why}</p>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-soft"><Segments segments={laneSegs[idx][0]} /></p>
               <div className="mt-4 grid gap-4 md:grid-cols-3">
-                <div><h4 className="text-sm font-semibold text-teal">What you could build</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.build.map((b) => <li key={b}>{b}</li>)}</ul></div>
-                <div><h4 className="text-sm font-semibold text-amber">What could go wrong</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.risks.map((b) => <li key={b}>{b}</li>)}</ul></div>
-                <div><h4 className="text-sm font-semibold text-accent">Your first 30 days</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.first30.map((b) => <li key={b}>{b}</li>)}</ul></div>
+                <div><h4 className="text-sm font-semibold text-teal">What you could build</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.build.map((b, bi) => <li key={b}><Segments segments={laneSegs[idx][1 + bi]} /></li>)}</ul></div>
+                <div><h4 className="text-sm font-semibold text-amber">What could go wrong</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.risks.map((b, bi) => <li key={b}><Segments segments={laneSegs[idx][1 + l.build.length + bi]} /></li>)}</ul></div>
+                <div><h4 className="text-sm font-semibold text-accent">Your first 30 days</h4><ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{l.first30.map((b, bi) => <li key={b}><Segments segments={laneSegs[idx][1 + l.build.length + l.risks.length + bi]} /></li>)}</ul></div>
               </div>
               <details className="mt-4 text-sm"><summary className="cursor-pointer text-muted">Sources for this lane</summary><Links items={l.sources} /></details>
             </article>
@@ -102,11 +112,11 @@ export default function Page() {
       <section aria-labelledby="paths">
         <h2 id="paths" className="text-2xl font-semibold">Four ways in</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {PATHS.map((p) => (
+          {PATHS.map((p, pi) => (
             <article key={p.title} className="card p-5">
               <h3 className="text-lg font-semibold">{p.title}</h3>
-              <p className="mt-1 text-sm text-soft">{p.blurb}</p>
-              <p className="mt-2 text-sm"><span className="font-semibold text-accent">Next step: </span><span className="text-soft">{p.next}</span></p>
+              <p className="mt-1 text-sm text-soft"><Segments segments={pathSegs[pi][0]} /></p>
+              <p className="mt-2 text-sm"><span className="font-semibold text-accent">Next step: </span><span className="text-soft"><Segments segments={pathSegs[pi][1]} /></span></p>
             </article>
           ))}
         </div>

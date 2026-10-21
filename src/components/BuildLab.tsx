@@ -1,11 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { annotateBlocks } from "@/lib/glossary";
+import { Segments } from "./GlossaryTerm";
 import { IDEAS, LAB_SOURCES, PROJECTS, TOOLS } from "@/data/labs";
 import CodeBlock from "./CodeBlock";
 
 export default function BuildLab({ scripts }: { scripts: Record<string, string> }) {
   const [active, setActive] = useState(PROJECTS[0].id);
   const p = PROJECTS.find((x) => x.id === active) ?? PROJECTS[0];
+  // goal, learning points, step texts, honest limits and extensions share one set, so each term is marked once per lab
+  const segs = useMemo(() => annotateBlocks([p.goal, p.learn.join(" · "), ...p.steps.map((s) => s.text), p.honest, ...p.extend]), [p]);
 
   return (
     <div className="mt-6 space-y-8">
@@ -43,8 +47,8 @@ export default function BuildLab({ scripts }: { scripts: Record<string, string> 
             <span className="rounded-full border border-line px-2 py-0.5 text-soft">{p.time}</span>
             <span className={`rounded-full border px-2 py-0.5 ${p.needsAccount ? "border-amber/50 text-amber" : "border-teal/50 text-teal"}`}>{p.needsAccount ? "Needs a free IBM account" : "No account needed"}</span>
           </div>
-          <p className="mt-3 text-soft">{p.goal}</p>
-          <p className="mt-2 text-sm text-soft"><span className="font-semibold text-ink">You'll learn: </span>{p.learn.join(" · ")}</p>
+          <p className="mt-3 text-soft"><Segments segments={segs[0]} /></p>
+          <p className="mt-2 text-sm text-soft"><span className="font-semibold text-ink">You'll learn: </span><Segments segments={segs[1]} /></p>
         </div>
 
         <ol className="space-y-4">
@@ -54,7 +58,7 @@ export default function BuildLab({ scripts }: { scripts: Record<string, string> 
                 <span className="mono mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-card2 text-sm text-accent">{i + 1}</span>
                 <span>{s.title}</span>
               </h3>
-              <p className="mt-2 text-[0.95rem] leading-relaxed text-soft">{s.text}</p>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-soft"><Segments segments={segs[2 + i]} /></p>
               {s.code && <div className="mt-3"><CodeBlock code={s.code} label={s.title} /></div>}
               {s.expected && (
                 <div className="mt-3">
@@ -74,11 +78,11 @@ export default function BuildLab({ scripts }: { scripts: Record<string, string> 
 
         <div className="card border-amber/30 p-4">
           <h3 className="font-semibold text-amber">Honest limits</h3>
-          <p className="mt-1 text-sm text-soft">{p.honest}</p>
+          <p className="mt-1 text-sm text-soft"><Segments segments={segs[2 + p.steps.length]} /></p>
         </div>
         <div>
           <h3 className="font-semibold">Extend it</h3>
-          <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{p.extend.map((e) => <li key={e}>{e}</li>)}</ul>
+          <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-soft">{p.extend.map((e, ei) => <li key={e}><Segments segments={segs[3 + p.steps.length + ei]} /></li>)}</ul>
         </div>
       </section>
 

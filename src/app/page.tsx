@@ -8,7 +8,7 @@ import { PUZZLES } from "@/lib/puzzles";
 const SECTIONS = [
   { href: "/learn", title: "Learning Path", tag: "4 stages · quizzes", text: "Foundations → Qubits & Gates → Algorithms → Real-World Applications, with the actual math and a progress tracker." },
   { href: "/play", title: "Circuit Puzzles", tag: `${PUZZLES.length} puzzles · 3 levels`, text: "Reach a target quantum state in as few gates as you can. Every par is proven minimal by exhaustive search." },
-  { href: "/demos", title: "Interactive Demos", tag: "4 simulators", text: "Rotate a qubit on the Bloch sphere, measure it, entangle a Bell pair, and wire your own circuit." },
+  { href: "/demos", title: "Interactive Demos", tag: "5 simulators", text: "Rotate a qubit, measure it, entangle a Bell pair, wire a circuit and add noise, and catch an eavesdropper in a quantum key exchange." },
   { href: "/build-lab", title: "Build Lab", tag: "4 hands-on labs", text: "Run a circuit on real IBM hardware, test a Bell inequality, and try Cirq and PennyLane. Starter code included." },
   { href: "/think-bigger", title: "Think Bigger", tag: "opportunities · your goals", text: "Where the field is heading, where the opportunities are, a hype check, and a space for your own quantum goals." },
   { href: "/resources", title: "Resource Library", tag: `${RESOURCES.length} curated picks`, text: "Videos, courses, podcasts and books, filterable by format, level and cost." },
