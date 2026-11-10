@@ -1,9 +1,11 @@
 import Link from "next/link";
 import Constellation from "@/components/Constellation";
 import StartHere from "@/components/StartHere";
+import { TourButton } from "@/components/Tour";
 import { REAL_WORLD } from "@/data/realworld";
 import { RESOURCES } from "@/data/resources";
 import { PUZZLES } from "@/lib/puzzles";
+import { TOURS } from "@/data/tours";
 
 const SECTIONS = [
   { href: "/learn", title: "Learning Path", tag: "4 stages · quizzes", text: "Foundations → Qubits & Gates → Algorithms → Real-World Applications, with the actual math and a progress tracker." },
@@ -13,6 +15,7 @@ const SECTIONS = [
   { href: "/think-bigger", title: "Think Bigger", tag: "opportunities · your goals", text: "Where the field is heading, where the opportunities are, a hype check, and a space for your own quantum goals." },
   { href: "/resources", title: "Resource Library", tag: `${RESOURCES.length} curated picks`, text: "Videos, courses, podcasts and books, filterable by format, level and cost." },
   { href: "/mindy", title: "Mindy's Space", tag: "notebook · portfolio", text: "Why this site exists, how it was built, what I'm learning, and what's next." },
+  { href: "/guide", title: "Guide & Tours", tag: `${TOURS.length} guided tours`, text: "New to all this? Step-by-step tours show you what to click and what each idea means, in plain language." },
   { href: "/real-world", title: "Quantum in the Real World", tag: `${REAL_WORLD.length} technologies`, text: "What's already in your pocket, what's emerging, and what's still experimental — with the caveats." },
 ];
 
@@ -33,6 +36,7 @@ export default function Home() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/learn" className="btn btn-primary">Start the learning path</Link>
           <Link href="/demos" className="btn">Jump to the demos</Link>
+          <TourButton id="start">New here? Take the 2-minute tour</TourButton>
         </div>
         </div>
       </section>

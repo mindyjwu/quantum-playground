@@ -118,3 +118,12 @@ h1, h2, h3 { font-family: var(--font-serif); letter-spacing: -0.01em; }
 .term { all: unset; cursor: help; text-decoration: underline dotted var(--accent) 1.5px; text-underline-offset: 3px; color: inherit; border-radius: 3px; }
 .term:hover, .term[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 16%, transparent); }
 .term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Guided tours: the outlined target and the step card */
+.tour-hl { outline: 3px solid var(--amber); outline-offset: 4px; border-radius: 10px; box-shadow: 0 0 0 9px color-mix(in srgb, var(--amber) 16%, transparent); scroll-margin-top: 92px; }
+.tour-card {
+  position: fixed; z-index: 50; right: 12px; bottom: 12px; left: 12px; margin-left: auto; max-width: 26rem; max-height: 62vh; overflow-y: auto;
+  padding: 14px 16px; border-radius: 16px; background: var(--bg); border: 1px solid var(--amber);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .55);
+}
+html.tour-on main { padding-bottom: 24rem; }

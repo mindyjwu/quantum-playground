@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import PrefsControls from "./PrefsControls";
 import PrefsMenu from "./PrefsMenu";
+import { TourButton } from "./Tour";
 
 const LINKS = [
   { href: "/learn", label: "Learn" },
@@ -37,6 +38,7 @@ export default function Nav() {
         <Link href="/" className="mr-auto font-serif text-lg font-semibold whitespace-nowrap"><span aria-hidden="true" className="mr-1.5 text-accent">✦</span>Quantum <span className="text-accent">Playground</span></Link>
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">{LINKS.map((l) => item(l, false))}</nav>
         <div className="hidden lg:block"><PrefsMenu /></div>
+        <TourButton className="btn !min-h-9 !px-3 max-sm:!hidden">Tour</TourButton>
         <ThemeToggle />
         <button className="btn !min-h-9 !px-3 lg:!hidden" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen((o) => !o)}>
           {open ? "Close" : "Menu"}
@@ -45,6 +47,10 @@ export default function Nav() {
       {open && (
         <nav id="mobile-menu" aria-label="Main" className="fade-in border-t border-line px-4 pb-3 lg:hidden">
           <div className="mx-auto grid max-w-5xl grid-cols-2 gap-1 pt-2">{LINKS.map((l) => item(l, true))}</div>
+          <div className="mx-auto mt-2 grid max-w-5xl grid-cols-2 gap-1 sm:hidden" onClick={() => setOpen(false)}>
+            <TourButton className="btn !min-h-9">Take a guided tour</TourButton>
+            <Link href="/guide" className="btn !min-h-9">Read the guide</Link>
+          </div>
           <div className="mx-auto mt-3 max-w-5xl border-t border-line pt-3"><PrefsControls /></div>
         </nav>
       )}

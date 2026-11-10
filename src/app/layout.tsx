@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import StarField from "@/components/StarField";
 import { PrefsProvider } from "@/components/PrefsProvider";
+import { TourProvider } from "@/components/Tour";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -31,11 +32,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-screen">
         <StarField />
         <PrefsProvider>
-          <Nav />
-          <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
+          <TourProvider>
+            <Nav />
+            <main className="mx-auto w-full max-w-5xl px-4 pb-24 pt-8 sm:px-6">{children}</main>
+          </TourProvider>
         </PrefsProvider>
         <footer className="mx-auto max-w-5xl border-t border-line px-4 py-8 text-sm text-muted sm:px-6">
           <nav aria-label="Footer" className="mb-3 flex flex-wrap gap-x-5 gap-y-1">
+            <Link className="text-soft hover:text-ink" href="/guide">Guide</Link>
             <Link className="text-soft hover:text-ink" href="/glossary">Glossary</Link>
             <Link className="text-soft hover:text-ink" href="/mindy">Mindy's Space</Link>
             <a className="text-soft hover:text-ink" href="https://github.com/mindyjwu/quantum-playground" target="_blank" rel="noopener noreferrer">Source on GitHub ↗</a>

@@ -45,6 +45,13 @@ intermediate and expert puzzles judge the full state including phase. Progress i
 The home page's **constellation** lights one star per completed lesson, quiz or puzzle (31 in total). **Mindy's Space** (`/mindy`) is
 written from `src/data/mindy.ts`; edit that file to update it.
 
+## Guided tours and guide page
+`/guide` explains the site in plain language (aimed at a curious high-schooler) and lists 7 short guided tours (`src/data/tours.ts`).
+A tour opens the right page, outlines one thing in gold, and says what to try (`src/components/Tour.tsx`). Start one from the **Tour**
+button in the header (inside the menu on phones), from `/guide`, or with a link: `?tour=<id>` where id is one of
+`start` `qubit` `entangle` `noise` `spy` `puzzle` `future`. Each step lists CSS selectors to highlight; the first visible one wins.
+`tests/tours.test.ts` checks that every step points at a real page and stays short and formula-free.
+
 ## Glossary tooltips
 `src/data/glossary.ts` holds ~110 plain-English terms (`match` lists every wording to recognize). On Learn, Real World, Think Bigger and Build Lab each term is underlined the
 first time it appears in a block of text (`src/lib/glossary.ts`) and explains itself on tap, click, hover or keyboard (Enter/Space; Escape closes).
